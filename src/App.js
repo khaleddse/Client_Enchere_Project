@@ -1,11 +1,11 @@
-import Spinner from "./components/UI/Spinner/Spinner"
+import Spinner from "./components/UI/Spinner/Spinner";
+import Route from "./Routes"
 
 function App() {
   return (
     <div>
-      <Spinner/>
-      <h2>        Enchere is runing ...
-      </h2>
+      
+      <Route />
     </div>
   );
 }
