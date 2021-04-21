@@ -1,12 +1,15 @@
 import Spinner from "./components/UI/Spinner/Spinner";
 import Route from "./Routes"
-
+import Footer from "./components/Footer/Footer"
+import { ChakraProvider } from "@chakra-ui/react"
+import Navbar from "./components/AppBar/AppBar"
 function App() {
   return (
-    <div>
-      
+    <ChakraProvider>
+      <Navbar/>
       <Route />
-    </div>
+      <Footer/>
+    </ChakraProvider>
   );
 }
 
