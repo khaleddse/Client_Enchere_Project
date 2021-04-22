@@ -2,7 +2,9 @@ import Login from "./pages/Auth/Login";
 import Signup from "./pages/Auth/Sinup";
 import  StripeContainer from "./pages/Stripe/StripeContainer";
 import { Route, Switch, Redirect } from "react-router-dom";
+import Account from "./pages/Account/Account"
 import AddAnnoucement from "./pages/Annoncement/AddAnnoncement";
+
 const Routes = () => {
   
   let routes;
@@ -28,6 +30,10 @@ const Routes = () => {
         path="/pay"
         exact
         render={(props)=><StripeContainer {...props}/>} />
+                <Route
+        path="/account"
+        exact
+        render={(props)=><Account {...props}/>} />
         
       </Switch>
     );
