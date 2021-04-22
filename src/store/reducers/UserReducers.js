@@ -7,6 +7,22 @@ const initialState = {
   isauthEmpl: false,
   token: "",
   error: false,
+  user:[],
+  listcategorie:[
+    {
+        subcategs: [
+            {
+               
+                _id: "6080a51301e27019070ae2d8",
+                nom: "bmw",
+               
+            }
+        ],
+        _id: "6080a4f401e27019070ae2d7",
+        nom: "voiture",
+        
+    }
+]
 };
 
 const login = (state, action) => {
@@ -15,8 +31,10 @@ const login = (state, action) => {
     isauth: true,
     isauthEmpl: false,
     error: false,
+    user:[decode(action.login_data.token)]
   };
   localStorage.setItem("token", action.login_data.token);
+
   return updateObject(state, updatestate);
 };
 const Failed_Auth = (state, action) => {
@@ -26,6 +44,7 @@ const Failed_Auth = (state, action) => {
     isauth: false,
     isauthEmpl: false,
     error: true,
+  
   });
 };
 

@@ -44,6 +44,7 @@ const Login = (props) => {
       },
     }));
   };
+  
   const hasError = (field) =>formState.touched[field] && formState.errors[field] ? true : false;
     
 
@@ -63,7 +64,9 @@ const Login = (props) => {
   
   
   return (
+    
     <Auth>
+    
       <form onSubmit={(e) => submitFormHandler(e)}>
         <TextField
           variant="outlined"
@@ -113,6 +116,7 @@ const mapStateToProps = (state) => {
   return {
     // auth:state.isauth,
     err: state.users.error,
+   
   };
 };
 const mapDispatchToProps = (dispatch) => {

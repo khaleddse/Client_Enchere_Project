@@ -21,10 +21,12 @@ import {
     ChevronDownIcon,
     ChevronRightIcon,
   } from '@chakra-ui/icons';
-  
+  import {useEffect} from "react";
   export default function Navbar() {
     const { isOpen, onToggle } = useDisclosure();
   
+   
+
     return (
       <Box>
         <Flex
