@@ -56,4 +56,38 @@ const signUpSchema = {
     },
   },
 };
-export { signInSchema, signUpSchema};
+const AddAnnouncementSchema = {
+  objet: {
+    presence: { allowEmpty: false, message: "est obligatoire!" },
+    length: {
+      minimum: 4,
+      maximum: 64,
+      message: "maximum 64 caractére ,minimum 4!",
+    },
+  },
+  detail: {
+    length: {
+      maximum: 1000,
+      message: "maximum 1000 caractére!",
+    },
+  },
+  adresse: {
+    presence: { allowEmpty: false, message: "est obligatoire!" },
+  },
+  image: {},
+  telephone: {
+    presence: { allowEmpty: false, message: "est obligatoire!" },
+    length: {
+      minimum: 8,
+      message: "minimum 8 chiffre !",
+    },
+    format: {
+      pattern: /^(\+?0*216)?\d{8}$/,
+      message: "forme invalide!",
+    },
+  },
+  subcategorie: {
+    presence: { allowEmpty: false, message: "est obligatoire!" },
+  },
+};
+export { signInSchema, signUpSchema,AddAnnouncementSchema};

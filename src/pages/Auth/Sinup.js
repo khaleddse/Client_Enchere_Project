@@ -114,7 +114,7 @@ const Signup = () => {
       <form onSubmit={(e) => onSignupHandler(e)}>
         
         {fieldsArray.map(({ name, value }) => (
-          
+          <div>
           <TextField
             name={name}
             id={name}
@@ -125,8 +125,9 @@ const Signup = () => {
             onChange={inputChangeHandler}
             error={hasError(name)}
             helperText={hasError(name) ? formState.error[name] : null}
-          />
-        
+          /> 
+        <br/>
+        </div>
         ))}
         <Button
           variant="contained"

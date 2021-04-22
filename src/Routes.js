@@ -3,12 +3,19 @@ import Signup from "./pages/Auth/Sinup";
 import  StripeContainer from "./pages/Stripe/StripeContainer";
 import { Route, Switch, Redirect } from "react-router-dom";
 import Account from "./pages/Account/Account"
+import AddAnnoucement from "./pages/Annoncement/AddAnnoncement";
+
 const Routes = () => {
   
   let routes;
   
     routes = (
-      <Switch>
+      <Switch>*
+         <Route
+          path="/addannonce"
+          exact
+          render={(props) => <AddAnnoucement {...props} />}
+        />
         <Route
           path="/signin"
           exact
