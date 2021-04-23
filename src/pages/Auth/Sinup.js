@@ -30,15 +30,14 @@ const Signup = () => {
   });
 
   useEffect(() => {
-    
-      const errors = validate(formState.values, signUpSchema);
-      
-      setFormState((formState) => ({
-        ...formState,
-        isValid: errors ? false : true,
-        error: errors || {},
-      }));
-    }, [formState.values]);
+    const errors = validate(formState.values, signUpSchema);
+
+    setFormState((formState) => ({
+      ...formState,
+      isValid: errors ? false : true,
+      error: errors || {},
+    }));
+  }, [formState.values]);
 
   const inputChangeHandler = (e) => {
     e.target.name === "email" && setSignupFailed(false);
@@ -55,24 +54,36 @@ const Signup = () => {
       },
     }));
   };
-  let history=useHistory();
+  let history = useHistory();
   const onSignupHandler = async (e) => {
     e.preventDefault();
-    const {firstname,lastname,phone,image,email,password} = formState.values;
+    const {
+      firstname,
+      lastname,
+      phone,
+      image,
+      email,
+      password,
+    } = formState.values;
     const signupData = {
-      firstname,lastname,phone,image,email,password
+      firstname,
+      lastname,
+      phone,
+      image,
+      email,
+      password,
     };
     setisLoading(true);
 
-     const response = await signupHandler(signupData);
-    
-      if (response) {
-        history.push("/signin");
-      } else {
-        setSignupFailed(true);
-        setOpen(false);
-      }
-      setisLoading(false);
+    const response = await signupHandler(signupData);
+
+    if (response) {
+      history.push("/signin");
+    } else {
+      setSignupFailed(true);
+      setOpen(false);
+    }
+    setisLoading(false);
   };
   const isValidPassword = () => {
     return formState.touched["confirmpassword"]
@@ -112,28 +123,33 @@ const Signup = () => {
   return (
     <Auth>
       <form onSubmit={(e) => onSignupHandler(e)}>
-        
         {fieldsArray.map(({ name, value }) => (
           <div>
-          <TextField
-            name={name}
-            id={name}
-            key={name}
-            label={name}
-            type={name==="image"?"name":name==="confirmpassword"?"password":name}
-            value={value}
-            onChange={inputChangeHandler}
-            error={hasError(name)}
-            helperText={hasError(name) ? formState.error[name] : null}
-          /> 
-        <br/>
-        </div>
+            <TextField
+              name={name}
+              id={name}
+              key={name}
+              label={name}
+              type={
+                name === "image"
+                  ? "name"
+                  : name === "confirmpassword"
+                  ? "password"
+                  : name
+              }
+              value={value}
+              onChange={inputChangeHandler}
+              error={hasError(name)}
+              helperText={hasError(name) ? formState.error[name] : null}
+            />
+            <br />
+          </div>
         ))}
         <Button
           variant="contained"
           color="primary"
           onClick={onSignupHandler}
-          disabled={ !formState.isValid || !isValidPassword()}
+          disabled={!formState.isValid || !isValidPassword()}
           style={{
             marginTop: "30px",
           }}

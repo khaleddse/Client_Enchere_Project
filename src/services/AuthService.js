@@ -1,14 +1,15 @@
 
-import axios from 'axios';
+import axios from '../axios-ordres';
 export const signupHandler = (authData) => {
     return axios
-      .post("http://localhost:5000/user/add", authData)
+      .post("/user/add", authData)
       .then((resData) => {
           console.log(resData)
         return resData.data;
       })
       .catch((err) => {
-          console.log(err)
-        console.error(err);
+          console.log(err.message)
+        console.error(err.message);
       });
   };
+  

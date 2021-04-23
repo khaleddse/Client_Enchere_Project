@@ -4,11 +4,12 @@ import Button from "@material-ui/core/Button";
 import Auth from "./Auth";
 import * as authAction from "../../store/actions/index";
 import { connect } from "react-redux";
-import {signInSchema} from "../util/schema";
+import { signInSchema } from "../util/schema";
 import validate from "validate.js";
+import { useHistory } from "react-router";
 
 const Login = (props) => {
-    const [isLoading ,setIsLoading]=useState(false)
+  const [isLoading, setIsLoading] = useState(false);
   const [formState, setFormState] = useState({
     values: {
       email: "",
@@ -27,8 +28,8 @@ const Login = (props) => {
       errors: errors || {},
     }));
   }, [formState.values]);
+  let history = useHistory();
 
- 
   const inputChangeHandler = (e) => {
     //setSignupFailed(false);
     e.persist();
@@ -44,29 +45,21 @@ const Login = (props) => {
       },
     }));
   };
-  
-  const hasError = (field) =>formState.touched[field] && formState.errors[field] ? true : false;
-    
 
-    const submitFormHandler = async (e) => {
-        e.preventDefault();
-        setIsLoading(true);
-       
-        
-          props.onLoginHandler(
-            formState.values.email,
-            formState.values.password,
-          );
-          
-        setIsLoading(false);
-    };
+  const hasError = (field) =>
+    formState.touched[field] && formState.errors[field] ? true : false;
+
+  const submitFormHandler = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    props.onLoginHandler(formState.values.email, formState.values.password);
     
-  
-  
+    setIsLoading(false);
+  };
+
   return (
-    
     <Auth>
-    
       <form onSubmit={(e) => submitFormHandler(e)}>
         <TextField
           variant="outlined"
@@ -103,11 +96,9 @@ const Login = (props) => {
           variant="contained"
           color="primary"
           disabled={isLoading || !formState.isValid}
-         
         >
           Se connecter
         </Button>
-    
       </form>
     </Auth>
   );
@@ -116,7 +107,6 @@ const mapStateToProps = (state) => {
   return {
     // auth:state.isauth,
     err: state.users.error,
-   
   };
 };
 const mapDispatchToProps = (dispatch) => {

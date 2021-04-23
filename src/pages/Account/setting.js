@@ -8,7 +8,7 @@ import {
   Button,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import avatar from "../../assets/images/avatar.png"
+import avatar from "../../assets/images/avatar.png";
 const inputs = [
   {
     label: "First name",
@@ -51,11 +51,7 @@ const Setting = () => {
         spacing={{ base: "1rem", md: "3rem" }}
         m="2rem 3rem"
       >
-        <Avatar
-          size="xl"
-          name="Segun Adebayo"
-          src={image || avatar}
-        />
+        <Avatar size="xl" name="Segun Adebayo" src={image || avatar} />
         <HStack>
           <Button
             colorScheme="teal"
@@ -78,7 +74,11 @@ const Setting = () => {
           <Text w="10rem" fontSize="md" align="end">
             {item.label}
           </Text>
-          <Input variant="outline"  placeholder={item.value} disabled={item.label=="E-mail"?true:false} />
+          <Input
+            variant="outline"
+            placeholder={item.value}
+            disabled={item.label === "E-mail" ? true : false}
+          />
         </HStack>
       ))}
       <HStack justify="center">

@@ -1,21 +1,19 @@
-import { useState, useEffect, useContext } from "react";
-
+import { useState, useEffect } from "react";
 import validate from "validate.js";
 import { regions } from "./data";
-///import "../ContactUs/LoggedIn.css";
 import TextField from "@material-ui/core/TextField";
 import ImageUploader from "react-images-upload";
 import Button from "@material-ui/core/Button";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import { AddAnnouncementSchema } from "../util/schema";
-
+import { onAddNormalAnnonce } from "../../services/AnnonceService";
 import InputLabel from "@material-ui/core/InputLabel";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
-
+import decode from "jwt-decode";
+import InputAdornment from "@material-ui/core/InputAdornment";
 import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
@@ -25,24 +23,23 @@ const useStyles = makeStyles((theme) => ({
     backgroundSize: "cover",
     backgroundPosition: "center",
   },
-  image:{
-    marginTop:"10%",
-    width:"80%",
+  image: {
+    marginTop: "10%",
+    width: "80%",
     display: "block",
-  marginLeft:"auto",
-  marginRight: "auto",
+    marginLeft: "auto",
+    marginRight: "auto",
   },
-  LogoGrid:{
+  LogoGrid: {
     backgroundPosition: "center",
-    textAlign:"center"
+    textAlign: "center",
   },
-  form:{
+  form: {
     width: "90%",
     display: "flex",
     flexDirection: "column",
     margin: " auto",
-
-    },
+  },
   formGrid: {
     backgroundColor: "rgba(125, 138, 255, 0.1)",
   },
@@ -50,14 +47,18 @@ const useStyles = makeStyles((theme) => ({
 
 const AddAnnoucement = (props) => {
   const classes = useStyles();
-  
+
   const [isLoading, setisLoading] = useState(false);
   const [formState, setFormState] = useState({
     values: {
       objet: "",
       detail: "",
-      adresse: "",
-      telephone: "",
+      city: {
+        nom: "",
+        id: "",
+      },
+      phone: "",
+      price: "",
       subcategorie: {
         id: "",
         nom: "",
@@ -71,6 +72,7 @@ const AddAnnoucement = (props) => {
 
   useEffect(() => {
     const errors = validate(formState.values, AddAnnouncementSchema);
+
     setFormState((formState) => ({
       ...formState,
       isValid: errors ? false : true,
@@ -87,204 +89,277 @@ const AddAnnoucement = (props) => {
       },
     }));
   };
-console.log(props.Listcategories)
-  let history = useHistory();
-  const toBase64 = (file) =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = (error) => reject(error);
-    });
+  const token = localStorage.getItem("token");
+  const user = decode(token);
+
   const submitFormHandler = async (e) => {
     e.preventDefault();
-    // console.log(formState);
+
     e.preventDefault();
     setisLoading(true);
     const form = new FormData();
 
+    form.append("subject", formState.values.objet);
+    form.append("details", formState.values.detail);
+    form.append("city", formState.values.city);
+    form.append("phone", formState.values.phone);
+    form.append("price", formState.values.price);
     if (formState.values.image) {
-      let result = await toBase64(formState.values.image[0]).catch((e) =>
-        Error(e)
-      );
-      form.append("image", result);
+      form.append("image", formState.values.image[0]);
     }
-
-    form.append("objet", formState.values.objet);
-    form.append("detail", formState.values.detail);
-    form.append("adresse", formState.values.adresse);
-    form.append("telephone", formState.values.telephone);
+    form.append("likes", "1");
     const subcategId = formState.values.subcategorie.id;
-    //await AddPost(form, subcategId, props.user.userId);
+    await onAddNormalAnnonce(
+      user.userId,
+      subcategId,
+      formState.values.city.id,
+      form
+    );
     setisLoading(false);
-    history.push("/announcements");
+    //history.push("/announcements");
   };
 
   const inputChangeHandler = (e) => {
     e.persist();
-    const id = e.target.value.slice(
-      e.target.value.indexOf("$") + 1,
-      e.target.value.length
-    );
-    const name = e.target.value.slice(0, e.target.value.indexOf("$"));
-    e.target.name === "subcategorie"
-      ? setFormState((formState) => ({
-          ...formState,
-          values: {
-            ...formState.values,
-            [e.target.name]: {
-              id: id,
-              nom: name,
-            },
+
+    if (e.target.name === "subcategorie") {
+      const id = e.target.value.slice(
+        e.target.value.indexOf("$") + 1,
+        e.target.value.length
+      );
+      const name = e.target.value.slice(0, e.target.value.indexOf("$"));
+      setFormState((formState) => ({
+        ...formState,
+        values: {
+          ...formState.values,
+          [e.target.name]: {
+            id: id,
+            nom: name,
           },
-          touched: {
-            ...formState.touched,
-            [e.target.name]: true,
+        },
+        touched: {
+          ...formState.touched,
+          [e.target.name]: true,
+        },
+      }));
+    } else if (e.target.name === "city") {
+      const id = e.target.value.slice(
+        e.target.value.indexOf("$") + 1,
+        e.target.value.length
+      );
+      const name = e.target.value.slice(0, e.target.value.indexOf("$"));
+      setFormState((formState) => ({
+        ...formState,
+        values: {
+          ...formState.values,
+          [e.target.name]: {
+            id: id,
+            nom: name,
           },
-        }))
-      : setFormState((formState) => ({
-          ...formState,
-          values: {
-            ...formState.values,
-            [e.target.name]: e.target.value,
-          },
-          touched: {
-            ...formState.touched,
-            [e.target.name]: true,
-          },
-        }));
+        },
+        touched: {
+          ...formState.touched,
+          [e.target.name]: true,
+        },
+      }));
+    } else {
+      setFormState((formState) => ({
+        ...formState,
+        values: {
+          ...formState.values,
+          [e.target.name]: e.target.value,
+        },
+        touched: {
+          ...formState.touched,
+          [e.target.name]: true,
+        },
+      }));
+    }
   };
 
   const hasError = (field) => {
     return formState.touched[field] && formState.errors[field] ? true : false;
   };
   return (
-  
-      <form onSubmit={(e) => submitFormHandler(e)} className={classes.form}>
-        <TextField
-          id="object"
-          name="objet"
-          label="Titre"
-          variant="outlined"
-          error={hasError("objet")}
-          helperText={hasError("objet") ? formState.errors.objet[0] : null}
+    <form onSubmit={(e) => submitFormHandler(e)} className={classes.form}>
+      <TextField
+        id="object"
+        key="object"
+        name="objet"
+        label="Titre"
+        variant="outlined"
+        error={hasError("objet")}
+        helperText={hasError("objet") ? formState.errors.objet[0] : null}
+        onChange={inputChangeHandler}
+        value={formState.values.objet}
+      />
+      <br />
+      <TextField
+        value={formState.values.detail}
+        onChange={inputChangeHandler}
+        id="detail"
+        key="detail"
+        name="detail"
+        label="Détails"
+        multiline
+        rows={4}
+        variant="outlined"
+      />
+      <br />
+      <TextField
+        id="price"
+        key="price"
+        name="price"
+        label="Prix en Dinar"
+        variant="outlined"
+        error={hasError("price")}
+        helperText={hasError("price") ? formState.errors.price[0] : null}
+        onChange={inputChangeHandler}
+        value={formState.values.price}
+        InputProps={{
+          startAdornment: <InputAdornment position="start">DT</InputAdornment>,
+        }}
+      />
+      <br />
+      <TextField
+        id="phone"
+        key="phone"
+        name="phone"
+        label="phone_Number"
+        variant="outlined"
+        error={hasError("phone")}
+        helperText={hasError("phone") ? formState.errors.phone[0] : null}
+        onChange={inputChangeHandler}
+        value={formState.values.phone}
+      />
+      <br />
+      <FormControl
+        variant="outlined"
+        error={hasError("city")}
+        key="regictrlform"
+      >
+        <InputLabel htmlFor="outlined-age-native-simple">Ville</InputLabel>
+        <Select
+          key="regionoptselect"
+          native
+          label="Ville"
+          inputProps={{
+            name: "city",
+            id: "outlined-age-native-simple",
+          }}
           onChange={inputChangeHandler}
-          value={formState.values.objet}
-        />
-        <br />
-        <TextField
-          value={formState.values.detail}
+        >
+          <option aria-label="None" value="" key="regionopt" />
+          {regions[0].map((region) => (
+            <option key={region.nom} value={region.nom + "$" + region._id}>
+              {region.nom}
+            </option>
+          ))}
+        </Select>
+        <FormHelperText>
+          {hasError("city") ? formState.errors.city[0] : null}
+        </FormHelperText>
+      </FormControl>
+      <br />
+      <FormControl
+        variant="outlined"
+        error={hasError("subcategorie")}
+        key="formctr"
+      >
+        <InputLabel htmlFor="outlined-age-native-simple">Catégorie</InputLabel>
+        <Select
+          key="sel"
+          native
+          label="Catégorie"
+          inputProps={{
+            name: "subcategorie",
+            id: "outlined-age-native-simple",
+          }}
           onChange={inputChangeHandler}
-          id="detail"
-          name="detail"
-          label="Détails"
-          multiline
-          rows={4}
-          variant="outlined"
-        />
-        <br />
-        <TextField
-          id="telephone"
-          name="telephone"
-          label="Numéro de téléphone"
-          variant="outlined"
-          error={hasError("telephone")}
-          helperText={
-            hasError("telephone") ? formState.errors.telephone[0] : null
-          }
-          onChange={inputChangeHandler}
-          value={formState.values.telephone}
-        />
-        <br />
-        <FormControl variant="outlined" error={hasError("adresse")}>
-          <InputLabel htmlFor="outlined-age-native-simple">Ville</InputLabel>
+        >
+          <option value="" key="opt" />
+          {props.Listcategories.map((categ) => {
+            let Result = categ.subcategs.map((subcateg) => {
+              return (
+                <option key="opst" value={subcateg.nom + "$" + subcateg._id}>
+                  {subcateg.nom}
+                </option>
+              );
+            });
+            return (
+              <optgroup key="grpop" label={categ.nom}>
+                {Result}
+              </optgroup>
+            );
+          })}
+        </Select>
+        <FormHelperText key="errsubcateg">
+          {hasError("subcategorie") ? formState.errors.subcategorie[0] : null}
+        </FormHelperText>
+      </FormControl>
+      <br />
+      {/* <FormControl variant="outlined" error={hasError("typeannonce")}>
+          <InputLabel htmlFor="outlined-age-native-simple">Type-Annonce</InputLabel>
           <Select
             native
-            label="Ville"
+            label="annonce-type"
             inputProps={{
-              name: "adresse",
+              name: "typeannonce",
               id: "outlined-age-native-simple",
             }}
-            value={formState.values.adresse}
+            value={formState.values.typeannonce}
             onChange={inputChangeHandler}
           >
             <option aria-label="None" value="" />
-            {regions.map((region) => (
-              <option key={region} value={region}>
-                {region}
+            {annoncestypes.map((type) => (
+              <option key={type} value={type}>
+                {type}
               </option>
             ))}
           </Select>
-          <FormHelperText>
-            {hasError("adresse") ? formState.errors.adresse[0] : null}
-          </FormHelperText>
-        </FormControl>
-        <br />
-        <FormControl variant="outlined" error={hasError("subcategorie")}>
-          <InputLabel htmlFor="outlined-age-native-simple">
-            Catégorie
-          </InputLabel>
-          <Select
-            native
-            label="Catégorie"
-            inputProps={{
-              name: "subcategorie",
-              id: "outlined-age-native-simple",
-            }}
-            onChange={inputChangeHandler}
-          >
-            <option value="" />
-            {props.Listcategories.map((categ) => {
-              let Result = categ.subcategs.map((subcateg) => {
-                return (
-                  <option value={subcateg.nom + "$" + subcateg._id}>
-                    {subcateg.nom}
-                  </option>
-                );
-              });
-              return <optgroup label={categ.nom}>{Result}</optgroup>;
-            })}
-          </Select>
-          <FormHelperText>
-            {hasError("subcategorie") ? formState.errors.subcategorie[0] : null}
-          </FormHelperText>
-        </FormControl>
-        <ImageUploader
-          singleImage={true}
-          withPreview={true}
-          withIcon={true}
-          label="Taille maximale du fichier: 5 Mo, acceptée: jpg"
-          buttonText="importer une image"
-          onChange={onDrop}
-          fileSizeError="la taille du fichier est trop grande"
-          fileTypeError="extension de fichier n'est pas prise en charge"
-          imgExtension={[".jpg", ".gif", ".png", ".gif"]}
-          maxFileSize={5242880}
-        />
-        <Button
-          variant="contained"
-          color="primary"
-          type="submit"
-          style={{
-            marginTop: "30px",
-          }}
-          disabled={isLoading || !formState.isValid}
-        >
-          Poster
-        </Button>
-        {isLoading && <LinearProgress color="primary" />}
-      </form>
-    
+          </FormControl>*/}
+      <FormHelperText key="helpers">
+        {hasError("city") ? formState.errors.city[0] : null}
+      </FormHelperText>
+
+      <ImageUploader
+        singleImage={true}
+        key="img"
+        type={File}
+        withPreview={true}
+        withIcon={true}
+        label="Taille maximale du fichier: 5 Mo, acceptée: jpg"
+        buttonText="importer une image"
+        onChange={onDrop}
+        fileSizeError="la taille du fichier est trop grande"
+        fileTypeError="extension de fichier n'est pas prise en charge"
+        imgExtension={[".jpg", ".gif", ".png", ".gif"]}
+        maxFileSize={5242880}
+      />
+      <Button
+        key="btnnn"
+        variant="contained"
+        color="primary"
+        type="submit"
+        style={{
+          marginTop: "30px",
+        }}
+        disabled={isLoading || !formState.isValid}
+        onClick={(e) => submitFormHandler(e)}
+      >
+        Poster
+      </Button>
+      {isLoading && <LinearProgress key="isloading" color="primary" />}
+    </form>
   );
 };
 
-
 const mapStateToProps = (state) => {
-    return {
-      // auth:state.isauth,
-      usr:state.users.user,
-      err: state.users.error,
-      Listcategories:state.users.listcategorie
-    };
+  return {
+    // auth:state.isauth,
+    usr: state.users.user,
+    err: state.users.error,
+    Listcategories: state.users.listcategorie,
   };
+};
 export default connect(mapStateToProps)(AddAnnoucement);
