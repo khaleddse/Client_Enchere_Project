@@ -1,6 +1,8 @@
+
 import * as actionTypes from "../actions/actionTypes";
 import decode from "jwt-decode";
 import { updateObject } from "../utility";
+
 
 const initialState = {
   isauth: false,
@@ -23,23 +25,19 @@ const initialState = {
         "nom": "voiture",
         
     }
-]
+],
 };
 
 
-const login = async(state, action) => {
-  const updatestate = {
-    token: action.login_data.token,
-    isauth: true,
-    isauthEmpl: false,
-    error: false,
-    
-  };
+const login = (state, action) => {
+  
   localStorage.setItem("token", action.login_data.token);
-
-  return updateObject(state, updatestate);
+  return updateObject(state, {
+    token: action.login_data.token,
+    isauth:true,
+  });
 };
-const Failed_Auth = async (state, action) => {
+const Failed_Auth =(state, action) => {
   localStorage.removeItem("token");
   return updateObject(state, {
     token: "",
@@ -51,20 +49,19 @@ const Failed_Auth = async (state, action) => {
 });
 }
 
-const onSignup=(state,action)=>{
+//const onSignup=(state,action)=>{
 
-}
+//}
 
-const reducer = (state = initialState, action) => {
+const reducer = ( state =initialState ,  action) => {
   switch (action.type) {
-    case actionTypes.SET_DATA:
-      return login(state = initialState, action);
-    case actionTypes.AUTH_FAILED:
-      return Failed_Auth(state, action);
-    case actionTypes.SIGNUP: return onSignup(state = initialState, action);
+    case actionTypes.SET_DATA:return login(state , action);
+    case actionTypes.AUTH_FAILED:return Failed_Auth(state, action);
+    //case actionTypes.SIGNUP: return onSignup(state , action);
     //case actionTypes.FETCH_INGREDIENTS_FAILED: return fetchIngredientsFailed(state, action);
     default: return state;
   }
+  
 };
 
 export default reducer;

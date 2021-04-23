@@ -19,8 +19,12 @@ const Login = (props) => {
     errors: {},
     touched: {},
   });
-
+  let history=useHistory()
   useEffect(() => {
+    
+    if(props.auth){
+      history.push('/addannonce')
+    }
     const errors = validate(formState.values, signInSchema);
     setFormState((formState) => ({
       ...formState,
@@ -28,7 +32,7 @@ const Login = (props) => {
       errors: errors || {},
     }));
   }, [formState.values]);
-  let history = useHistory();
+  
 
   const inputChangeHandler = (e) => {
     //setSignupFailed(false);
@@ -49,6 +53,8 @@ const Login = (props) => {
   const hasError = (field) =>
     formState.touched[field] && formState.errors[field] ? true : false;
 
+
+
   const submitFormHandler = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -56,6 +62,9 @@ const Login = (props) => {
     props.onLoginHandler(formState.values.email, formState.values.password);
     
     setIsLoading(false);
+
+ 
+
   };
 
   return (
@@ -105,7 +114,7 @@ const Login = (props) => {
 };
 const mapStateToProps = (state) => {
   return {
-    // auth:state.isauth,
+     auth:state.users.isauth,
     err: state.users.error,
   };
 };

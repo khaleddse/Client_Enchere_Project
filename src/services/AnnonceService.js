@@ -3,7 +3,7 @@ import {setToken} from "../axios-ordres";
 
 
 export const onAddNormalAnnonce = (userid,subcateg_id,cityId, authData) => {
-  console.log("aaa")
+
   const token = localStorage.getItem("token");
   axios.defaults.headers.common["Authorization"] = token;
   return axios
@@ -12,7 +12,7 @@ export const onAddNormalAnnonce = (userid,subcateg_id,cityId, authData) => {
       return resData.data;
     })
     .catch((err) => {
-      console.log(err.message)
+     
       console.error(err.message);
     });
 };

@@ -15,6 +15,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import decode from "jwt-decode";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import { connect } from "react-redux";
+import { useHistory } from "react-router";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -69,7 +70,7 @@ const AddAnnoucement = (props) => {
     errors: {},
     touched: {},
   });
-
+let history=useHistory()
   useEffect(() => {
     const errors = validate(formState.values, AddAnnouncementSchema);
 
@@ -116,7 +117,11 @@ const AddAnnoucement = (props) => {
       form
     );
     setisLoading(false);
-    //history.push("/announcements");
+   
+    
+     
+    
+   
   };
 
   const inputChangeHandler = (e) => {
