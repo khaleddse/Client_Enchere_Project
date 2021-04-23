@@ -1,6 +1,8 @@
+
 import * as actionTypes from "../actions/actionTypes";
 import decode from "jwt-decode";
 import { updateObject } from "../utility";
+
 
 const initialState = {
   isauth: false,
@@ -8,60 +10,58 @@ const initialState = {
   token: "",
   error: false,
   user:[],
+  citys:[],
   listcategorie:[
     {
-        subcategs: [
+        "subcategs": [
             {
-               
-                _id: "6080a51301e27019070ae2d8",
-                nom: "bmw",
-               
+                "announces": [],
+                "_id": "6082c08d5c4e9f2458b035d1",
+                "nom": "bmw",
+                
             }
         ],
-        _id: "6080a4f401e27019070ae2d7",
-        nom: "voiture",
+        "_id": "6082c0705c4e9f2458b035d0",
+        "nom": "voiture",
         
     }
-]
+],
 };
+
 
 const login = (state, action) => {
-  const updatestate = {
-    token: action.login_data.token,
-    isauth: true,
-    isauthEmpl: false,
-    error: false,
-    user:[decode(action.login_data.token)]
-  };
+  
   localStorage.setItem("token", action.login_data.token);
-
-  return updateObject(state, updatestate);
+  return updateObject(state, {
+    token: action.login_data.token,
+    isauth:true,
+  });
 };
-const Failed_Auth = (state, action) => {
+const Failed_Auth =(state, action) => {
   localStorage.removeItem("token");
   return updateObject(state, {
     token: "",
     isauth: false,
     isauthEmpl: false,
     error: true,
-  
-  });
-};
+   
 
-const onSignup=(state,action)=>{
-
+});
 }
 
-const reducer = (state = initialState, action) => {
+//const onSignup=(state,action)=>{
+
+//}
+
+const reducer = ( state =initialState ,  action) => {
   switch (action.type) {
-    case actionTypes.SET_DATA:
-      return login(state = initialState, action);
-    case actionTypes.AUTH_FAILED:
-      return Failed_Auth(state, action);
-    case actionTypes.SIGNUP: return onSignup(state = initialState, action);
+    case actionTypes.SET_DATA:return login(state , action);
+    case actionTypes.AUTH_FAILED:return Failed_Auth(state, action);
+    //case actionTypes.SIGNUP: return onSignup(state , action);
     //case actionTypes.FETCH_INGREDIENTS_FAILED: return fetchIngredientsFailed(state, action);
     default: return state;
   }
+  
 };
 
 export default reducer;

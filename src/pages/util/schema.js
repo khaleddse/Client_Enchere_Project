@@ -71,11 +71,11 @@ const AddAnnouncementSchema = {
       message: "maximum 1000 caractére!",
     },
   },
-  adresse: {
+  /* city: {
     presence: { allowEmpty: false, message: "est obligatoire!" },
-  },
+  },*/
   image: {},
-  telephone: {
+  phone: {
     presence: { allowEmpty: false, message: "est obligatoire!" },
     length: {
       minimum: 8,
@@ -86,8 +86,8 @@ const AddAnnouncementSchema = {
       message: "forme invalide!",
     },
   },
-  subcategorie: {
+  /*subcategorie: {
     presence: { allowEmpty: false, message: "est obligatoire!" },
-  },
+  },*/
 };
-export { signInSchema, signUpSchema,AddAnnouncementSchema};
+export { signInSchema, signUpSchema, AddAnnouncementSchema };

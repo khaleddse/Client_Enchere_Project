@@ -1,14 +1,13 @@
-
 import axios from '../axios-ordres';
-export const signupHandler = (authData) => {
+
+export const AllCitys = (authData) => {
     return axios
-      .post("/user/add", authData)
+      .get("/city/", authData)
       .then((resData) => {
-        
         return resData.data;
       })
       .catch((err) => {
-        console.error(err.message);
+       console.error(err.message);
       });
-  };
+};
   
