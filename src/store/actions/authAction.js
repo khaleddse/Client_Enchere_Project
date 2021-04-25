@@ -1,6 +1,7 @@
 import * as actionTypes from "./actionTypes";
 import axios from "../../axios-ordres";
 
+
 export const setData = (login_data) => {
   return {
     type: actionTypes.SET_DATA,
@@ -27,7 +28,7 @@ export const fetchSignupFailed=()=>{
     };
 }
 
-export const onSingin = (email, password) => {
+export const onSingin = (email, password,history) => {
   const authData = {
     email: email,
     password: password,
@@ -37,9 +38,11 @@ export const onSingin = (email, password) => {
       .post("/auth/login", authData)
       .then((resData) => {
         dispatch(setData(resData.data));
+       // decode(resData.data.token).grade==="user"?
+        history.push('/addannonce')
       })
       .catch((error) => {
-        console.log(error)
+        console.log(error.message)
         dispatch(fetchAuthFailed());
       });
   };

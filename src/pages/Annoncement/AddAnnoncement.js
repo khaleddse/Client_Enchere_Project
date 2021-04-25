@@ -70,7 +70,9 @@ const AddAnnoucement = (props) => {
     errors: {},
     touched: {},
   });
-let history=useHistory()
+useEffect(()=>{
+console.log("dispatch second backend call")
+},[])
   useEffect(() => {
     const errors = validate(formState.values, AddAnnouncementSchema);
 

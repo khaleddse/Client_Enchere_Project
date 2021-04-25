@@ -9,7 +9,7 @@ const initialState = {
   isauthEmpl: false,
   token: "",
   error: false,
-  user:[],
+  user:{},
   citys:[],
   listcategorie:[
     {
@@ -30,11 +30,13 @@ const initialState = {
 
 
 const login = (state, action) => {
-  
-  localStorage.setItem("token", action.login_data.token);
+  const token=action.login_data.token
+  localStorage.setItem("token", token);
   return updateObject(state, {
-    token: action.login_data.token,
+    token: token,
+    user:decode(token),
     isauth:true,
+  
   });
 };
 const Failed_Auth =(state, action) => {

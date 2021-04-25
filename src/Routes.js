@@ -5,9 +5,9 @@ import { Route, Switch } from "react-router-dom";
 import Account from "./pages/Account/Account";
 import AddAnnoucement from "./pages/Annoncement/AddAnnoncement";
 
-const Routes = () => {
+const Routes = ({isAuth}) => {
   let routes;
-
+console.log(isAuth)
   routes = (
     <Switch>
       <Route

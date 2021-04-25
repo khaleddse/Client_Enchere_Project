@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { withRouter } from "react-router-dom";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Auth from "./Auth";
@@ -8,7 +9,7 @@ import { signInSchema } from "../util/schema";
 import validate from "validate.js";
 import { useHistory } from "react-router";
 
-const Login = (props) => {
+const Login = ({ onLoginHandler, history, err }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [formState, setFormState] = useState({
     values: {
@@ -19,12 +20,8 @@ const Login = (props) => {
     errors: {},
     touched: {},
   });
-  let history=useHistory()
+
   useEffect(() => {
-    
-    if(props.auth){
-      history.push('/addannonce')
-    }
     const errors = validate(formState.values, signInSchema);
     setFormState((formState) => ({
       ...formState,
@@ -32,7 +29,6 @@ const Login = (props) => {
       errors: errors || {},
     }));
   }, [formState.values]);
-  
 
   const inputChangeHandler = (e) => {
     //setSignupFailed(false);
@@ -53,18 +49,11 @@ const Login = (props) => {
   const hasError = (field) =>
     formState.touched[field] && formState.errors[field] ? true : false;
 
-
-
   const submitFormHandler = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-
-    props.onLoginHandler(formState.values.email, formState.values.password);
-    
+    onLoginHandler(formState.values.email, formState.values.password, history);
     setIsLoading(false);
-
- 
-
   };
 
   return (
@@ -98,7 +87,7 @@ const Login = (props) => {
           label="Mot de passe"
           onChange={inputChangeHandler}
         />
-        {props.err && <p>E-mail où mot de passe incorrect !</p>}
+        {err && <p>E-mail où mot de passe incorrect !</p>}
         <Button
           type="submit"
           fullWidth
@@ -114,14 +103,15 @@ const Login = (props) => {
 };
 const mapStateToProps = (state) => {
   return {
-     auth:state.users.isauth,
+    auth: state.users.isauth,
     err: state.users.error,
+    linto: state.users.link,
   };
 };
 const mapDispatchToProps = (dispatch) => {
   return {
-    onLoginHandler: (email, password) =>
-      dispatch(authAction.onSingin(email, password)),
+    onLoginHandler: (email, password, history) =>
+      dispatch(authAction.onSingin(email, password, history)),
   };
 };
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Login));

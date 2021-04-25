@@ -1,15 +1,21 @@
 import Route from "./Routes";
 import Footer from "./components/Footer/Footer";
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, StatHelpText } from "@chakra-ui/react";
 import Navbar from "./components/AppBar/AppBar";
-function App() {
+import { connect } from "react-redux";
+function App({auth}) {
+ 
   return (
     <ChakraProvider>
       <Navbar />
-      <Route />
+      <Route isAuth={auth}/>
       <Footer />
     </ChakraProvider>
   );
 }
-
-export default App;
+const mapStateToProps=(state)=>{
+  return {
+    auth:state.users.isauth,
+  }
+}
+export default connect(mapStateToProps)(App);
