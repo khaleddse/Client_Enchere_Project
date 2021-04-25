@@ -1,8 +1,29 @@
 import { SimpleGrid, Badge, Image, Box } from "@chakra-ui/react";
 import { StarIcon } from "@chakra-ui/icons";
+import {getUserAnnounces} from "../../services/AnnonceService"
+import { useEffect, useState } from "react";
+import { userInfo } from "../../services/utils";
+import NotFound from "../../assets/images/NotFound.jpg";
 
 const Items = () => {
-  const properties = [
+  const [items, setitems] = useState([{
+    imageUrl: "https://bit.ly/2Z4KKcF",
+    imageAlt: "Rear view of modern home with pool",
+    beds: 3,
+    baths: 2,
+    title: "Modern home in city center in the heart of historic Los Angeles",
+    formattedPrice: "$1,900.00",
+    reviewCount: 34,
+    rating: 4,
+  }])
+  useEffect(async() => {
+    if(userInfo){
+      const anounces=await getUserAnnounces(userInfo.userId)
+      console.log("annonces",anounces)
+      setitems(anounces)
+    }
+  }, [])
+  /*const items = [
     {
       imageUrl: "https://bit.ly/2Z4KKcF",
       imageAlt: "Rear view of modern home with pool",
@@ -12,48 +33,18 @@ const Items = () => {
       formattedPrice: "$1,900.00",
       reviewCount: 34,
       rating: 4,
-    },
-    {
-      imageUrl: "https://bit.ly/2Z4KKcF",
-      imageAlt: "Rear view of modern home with pool",
-      beds: 3,
-      baths: 2,
-      title: "Modern home in city center in the heart of historic Los Angeles",
-      formattedPrice: "$1,900.00",
-      reviewCount: 34,
-      rating: 4,
-    },
-    {
-      imageUrl: "https://bit.ly/2Z4KKcF",
-      imageAlt: "Rear view of modern home with pool",
-      beds: 3,
-      baths: 2,
-      title: "Modern home in city center in the heart of historic Los Angeles",
-      formattedPrice: "$1,900.00",
-      reviewCount: 34,
-      rating: 4,
-    },
-    {
-      imageUrl: "https://bit.ly/2Z4KKcF",
-      imageAlt: "Rear view of modern home with pool",
-      beds: 3,
-      baths: 2,
-      title: "Modern home in city center in the heart of historic Los Angeles",
-      formattedPrice: "$1,900.00",
-      reviewCount: 34,
-      rating: 4,
-    },
-  ];
+    }
+  ];*/
   return (
-    <SimpleGrid minChildWidth="20rem" spacing="20px">
-      {properties.map((property) => (
-        <Box borderWidth="1px" borderRadius="lg" overflow="hidden">
-          <Image src={property.imageUrl} alt={property.imageAlt} />
+    <SimpleGrid minChildWidth="300px" spacing="10px">
+      {items && items.map((item) => (
+        <Box   transform="revert" boxShadow="xl"  borderWidth="1px" borderRadius="lg" overflow="hidden" width="300px" mb="5px">
+          <Image maxHeight="200px" width="100%"   src={item.image ?"http://localhost:5000/"+item.image:NotFound} alt={item.subject} />
 
           <Box p="6">
             <Box d="flex" alignItems="baseline">
               <Badge borderRadius="full" px="2" colorScheme="teal">
-                New
+                 {new Date(item.createdAt).getDate()>new Date().getDate()-1 && "New"}
               </Badge>
               <Box
                 color="gray.500"
@@ -63,7 +54,7 @@ const Items = () => {
                 textTransform="uppercase"
                 ml="2"
               >
-                {property.beds} beds &bull; {property.baths} baths
+                {item.phone} 
               </Box>
             </Box>
 
@@ -74,27 +65,19 @@ const Items = () => {
               lineHeight="tight"
               isTruncated
             >
-              {property.title}
+              {item.subject}
             </Box>
 
             <Box>
-              {property.formattedPrice}
+              {item.price}
               <Box as="span" color="gray.600" fontSize="sm">
-                / wk
+                / TND
               </Box>
             </Box>
 
             <Box d="flex" mt="2" alignItems="center">
-              {Array(5)
-                .fill("")
-                .map((_, i) => (
-                  <StarIcon
-                    key={i}
-                    color={i < property.rating ? "teal.500" : "gray.300"}
-                  />
-                ))}
               <Box as="span" ml="2" color="gray.600" fontSize="sm">
-                {property.reviewCount} reviews
+                {item.likes && item.likes.length} likes
               </Box>
             </Box>
           </Box>

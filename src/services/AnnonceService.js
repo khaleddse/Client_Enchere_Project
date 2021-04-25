@@ -41,3 +41,16 @@ export const onAddEnchereAnnonce = (subcateg_id,cityId, authData) => {
       console.error(err);
     });
 };
+
+export const getUserAnnounces = (id) => {
+
+  return axios
+    .get(`http://localhost:5000/announce/user/${id}`)
+    .then((resData) => {
+      console.log(resData);
+      return resData.data;
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+};
