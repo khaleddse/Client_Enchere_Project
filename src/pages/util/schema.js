@@ -13,6 +13,33 @@ const signInSchema = {
     },
   },
 };
+const UpdateAccountSchema = {
+  firstname: {
+    presence: { allowEmpty: false, message: "est obligatoire!" },
+    length: {
+      minimum: 3,
+      maximum: 15,
+    },
+  },
+  lastname: {
+    presence: { allowEmpty: false, message: "est obligatoire!" },
+    length: {
+      minimum: 3,
+      maximum: 15,
+    },
+  },
+  phone: {
+    numericality: true,
+    presence: { allowEmpty: false, message: "est obligatoire!" },
+    length: {
+      maximum: 15,
+    },
+  },
+  email: {
+    presence: { allowEmpty: false, message: "est obligatoire!" },
+    email: { message: "n'est pas valide !" },
+    length: { maximum: 64 },
+  }}
 
 const signUpSchema = {
   firstname: {
@@ -90,4 +117,4 @@ const AddAnnouncementSchema = {
     presence: { allowEmpty: false, message: "est obligatoire!" },
   },*/
 };
-export { signInSchema, signUpSchema, AddAnnouncementSchema };
+export { signInSchema, signUpSchema, AddAnnouncementSchema,UpdateAccountSchema };
