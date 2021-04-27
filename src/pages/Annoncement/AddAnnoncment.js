@@ -393,7 +393,12 @@ const AddAnnoucement = ({ Listcategories }) => {
                         </NumberInputStepper>
                       </NumberInput>
                     </VStack>
+                    <VStack width="100%" textAlign="left">
+                  <FormLabel color={`teal.500`}>
+                    <Text color="teal.500">initial_price</Text>
+                  </FormLabel>
                     <InputGroup>
+                    
                     <InputLeftElement
                       pointerEvents="none"
                       color="teal.500"
@@ -414,6 +419,7 @@ const AddAnnoucement = ({ Listcategories }) => {
                       children={<CheckIcon color="teal.500" />}
                     />
                   </InputGroup>
+                  </VStack>
                   </FormControl>
                 )
               )}
