@@ -23,6 +23,8 @@ import {
     ChevronRightIcon,
   } from '@chakra-ui/icons';
   import decode from "jwt-decode";
+  import {apiBaseUrl} from "../../services/utils"
+
   export default function Navbar() {
     const { isOpen, onToggle } = useDisclosure();
   
@@ -93,9 +95,21 @@ import {
             </Button>
             <Link
               display={localStorage.getItem('token')? 'inline-flex' :'none'}
-              href={'/account'}>
-              <Avatar size="sm" name="" src={localStorage.getItem('token')&&"http://localhost:5000/"+decode(localStorage.getItem('token')).image} />
+              href={'/account'}
+              >
+              <Avatar size="sm" name="" src={localStorage.getItem('token')&&apiBaseUrl+decode(localStorage.getItem('token')).image} />
             </Link>
+            <Button
+              display={!localStorage.getItem('token')?'none':'inline-flex' }
+              fontSize={'sm'}
+              fontWeight={400}
+              variant={'link'}
+              onClick={()=>{
+                localStorage.removeItem('token')
+                window.location.replace('/signin')
+              }}>
+              Logout
+            </Button>
           </Stack>
         </Flex>
   
