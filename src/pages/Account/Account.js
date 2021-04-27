@@ -15,7 +15,7 @@ const Account = () => {
       <Heading as="h4" size="md" m="1rem 1rem">
         My Account
       </Heading>
-      <Tabs isFitted variant="enclosed">
+      <Tabs isFitted variant="enclosed" isLazy>
         <TabList>
           <Tab>Settings</Tab>
           <Tab>My items</Tab>
