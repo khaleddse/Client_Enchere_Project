@@ -6,8 +6,6 @@ import {
   Flex,
   InputGroup,
   InputRightElement,
-  IconButton,
-  useColorMode,
   Heading,
   Text,
   Link,
@@ -19,9 +17,12 @@ import {
   Button,
   FormHelperText,
   VStack,
+  PhoneIcon,
+  CheckIcon
 } from "@chakra-ui/react";
+//import {CheckIcon,PhoneIcon} from "@chakra-ui/icons";
 import "./Auth.css";
-import { SunIcon, MoonIcon } from "@chakra-ui/icons";
+
 
 import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router-dom";
@@ -32,7 +33,6 @@ import validate from "validate.js";
 
 const LoginForm = ({ onLoginHandler, history, err }) => {
   const VARIANT_COLOR = "teal";
-  const { colorMode, toggleColorMode } = useColorMode();
 
   const [show, setShow] = React.useState(false);
   const handleClick = () => setShow(!show);
@@ -100,13 +100,7 @@ const LoginForm = ({ onLoginHandler, history, err }) => {
           textAlign="center"
           boxShadow="lg"
         >
-          <Box textAlign="right" py={8}>
-            <IconButton
-              icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
-              onClick={() => toggleColorMode()}
-              variant="ghost"
-            />
-          </Box>
+          
           <Box p={4}>
             <Box textAlign="center">
               <Heading>Sign In to Your Account</Heading>

@@ -14,7 +14,8 @@ import {
     useColorModeValue,
     useBreakpointValue,
     useDisclosure,
-    Avatar
+    Avatar,
+    useColorMode
   } from '@chakra-ui/react';
   import {
     HamburgerIcon,
@@ -24,12 +25,14 @@ import {
   } from '@chakra-ui/icons';
   import decode from "jwt-decode";
   import {apiBaseUrl} from "../../services/utils"
-
+  import { SunIcon, MoonIcon } from "@chakra-ui/icons";
   export default function Navbar() {
     const { isOpen, onToggle } = useDisclosure();
-  
+    const { colorMode, toggleColorMode } = useColorMode();
+
     return (
       <Box>
+       
         <Flex
           bg={useColorModeValue('white', 'gray.800')}
           color={useColorModeValue('gray.600', 'white')}
@@ -80,6 +83,13 @@ import {
               href={'/signin'}>
               Sign In
             </Button>
+            <Box textAlign="right" py={8}>
+            <IconButton
+              icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
+              onClick={() => toggleColorMode()}
+              variant="ghost"
+            />
+          </Box>
             <Button
               display={localStorage.getItem('token')?'none':{ base: 'none', md: 'inline-flex' }}
               fontSize={'sm'}
@@ -99,6 +109,7 @@ import {
               >
               <Avatar size="sm" name="" src={localStorage.getItem('token')&&apiBaseUrl+decode(localStorage.getItem('token')).image} />
             </Link>
+           
             <Button
               display={!localStorage.getItem('token')?'none':'inline-flex' }
               fontSize={'sm'}
