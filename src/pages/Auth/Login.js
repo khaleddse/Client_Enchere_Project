@@ -1,15 +1,42 @@
+import {
+  ThemeProvider,
+  theme,
+  CSSReset,
+  Box,
+  Flex,
+  InputGroup,
+  InputRightElement,
+  IconButton,
+  useColorMode,
+  Heading,
+  Text,
+  Link,
+  FormControl,
+  FormLabel,
+  Input,
+  Stack,
+  Checkbox,
+  Button,
+  FormHelperText,
+  VStack,
+} from "@chakra-ui/react";
+import "./Auth.css";
+import { SunIcon, MoonIcon } from "@chakra-ui/icons";
+
 import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router-dom";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import Auth from "./Auth";
 import * as authAction from "../../store/actions/index";
 import { connect } from "react-redux";
 import { signInSchema } from "../util/schema";
 import validate from "validate.js";
-import { useHistory } from "react-router";
 
-const Login = ({ onLoginHandler, history, err }) => {
+const LoginForm = ({ onLoginHandler, history, err }) => {
+  const VARIANT_COLOR = "teal";
+  const { colorMode, toggleColorMode } = useColorMode();
+
+  const [show, setShow] = React.useState(false);
+  const handleClick = () => setShow(!show);
+
   const [isLoading, setIsLoading] = useState(false);
   const [formState, setFormState] = useState({
     values: {
@@ -20,7 +47,6 @@ const Login = ({ onLoginHandler, history, err }) => {
     errors: {},
     touched: {},
   });
-
   useEffect(() => {
     const errors = validate(formState.values, signInSchema);
     setFormState((formState) => ({
@@ -57,48 +83,111 @@ const Login = ({ onLoginHandler, history, err }) => {
   };
 
   return (
-    <Auth>
-      <form onSubmit={(e) => submitFormHandler(e)}>
-        <TextField
-          variant="outlined"
-          margin="normal"
-          required
-          type="email"
-          fullWidth
-          autoComplete="email"
-          autoFocus
-          id="email"
-          name="email"
-          label="E-mail"
-          error={hasError("email")}
-          helperText={hasError("email") ? formState.errors.email[0] : null}
-          onChange={inputChangeHandler}
-          value={formState.values.email}
-        />
-        <TextField
-          ariant="outlined"
-          margin="normal"
-          required
-          fullWidth
-          type="password"
-          autoComplete="current-password"
-          id="password"
-          name="password"
-          label="Mot de passe"
-          onChange={inputChangeHandler}
-        />
-        {err && <p>E-mail où mot de passe incorrect !</p>}
-        <Button
-          type="submit"
-          fullWidth
-          variant="contained"
-          color="primary"
-          disabled={isLoading || !formState.isValid}
+    <ThemeProvider theme={theme}>
+      <CSSReset />
+      <Flex
+        minHeight="100vh"
+        width="full"
+        align="center"
+        justifyContent="center"
+      >
+        <Box
+          borderWidth={4}
+          px={4}
+          width="full"
+          maxWidth="500px"
+          borderRadius={2}
+          textAlign="center"
+          boxShadow="lg"
         >
-          Se connecter
-        </Button>
-      </form>
-    </Auth>
+          <Box textAlign="right" py={8}>
+            <IconButton
+              icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
+              onClick={() => toggleColorMode()}
+              variant="ghost"
+            />
+          </Box>
+          <Box p={4}>
+            <Box textAlign="center">
+              <Heading>Sign In to Your Account</Heading>
+              <Text>
+                <Link color={`${VARIANT_COLOR}.500`}>Enchére Tunise</Link>
+              </Text>
+            </Box>
+            <Box my={8} textAlign="left">
+              <form onSubmit={(e) => submitFormHandler(e)}>
+                <FormControl>
+                  <FormLabel>Email address</FormLabel>
+                  <VStack width="100%">
+                    <Input
+                      type="email"
+                      placeholder="Enter your email address"
+                      isInvalid={hasError("email")}
+                      name="email"
+                      variant="outline"
+                      onChange={inputChangeHandler}
+                      value={formState.values.email}
+                    />
+                    {hasError("email") && (
+                      <FormHelperText color="red">
+                        {formState.errors.email[0]}
+                      </FormHelperText>
+                    )}
+                  </VStack>
+                </FormControl>
+                <FormControl mt={4}>
+                  <FormLabel> Password</FormLabel>
+                  <InputGroup size="md">
+                    <VStack width="100%">
+                      <Input
+                        pr="4.5rem"
+                        type={show ? "text" : "password"}
+                        placeholder="Enter password"
+                        isInvalid={hasError("password")}
+                        name="password"
+                        variant="outline"
+                        onChange={inputChangeHandler}
+                        value={formState.values.password}
+                      />
+                      {hasError("password") && (
+                        <FormHelperText color="red">
+                          {formState.errors.password[0]}
+                        </FormHelperText>
+                      )}
+                    </VStack>
+                    <InputRightElement width="4.5rem">
+                      <Button h="1.75rem" size="sm" onClick={handleClick}>
+                        {show ? "Hide" : "Show"}
+                      </Button>
+                    </InputRightElement>
+                  </InputGroup>
+                </FormControl>
+                <Stack isInline justifyContent="space-between" mt={4}>
+                  <Box>
+                    <Checkbox>Remember Me</Checkbox>
+                  </Box>
+                  <Box>
+                    <Link color={`${VARIANT_COLOR}.500`}>
+                      Forgot your password?
+                    </Link>
+                  </Box>
+                </Stack>
+                <Button
+                  colorScheme="teal"
+                  type="submit"
+                  variant="solid"
+                  width="full"
+                  mt={4}
+                  isLoading={isLoading}
+                >
+                  Sign In
+                </Button>
+              </form>
+            </Box>
+          </Box>
+        </Box>
+      </Flex>
+    </ThemeProvider>
   );
 };
 const mapStateToProps = (state) => {
@@ -114,4 +203,8 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(authAction.onSingin(email, password, history)),
   };
 };
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Login));
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(LoginForm));

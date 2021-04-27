@@ -1,6 +1,6 @@
 import * as actionTypes from "./actionTypes";
 import axios from "../../axios-ordres";
-
+import decode from "jwt-decode";
 
 export const setData = (login_data) => {
   return {
@@ -38,8 +38,8 @@ export const onSingin = (email, password,history) => {
       .post("/auth/login", authData)
       .then((resData) => {
         dispatch(setData(resData.data));
-       // decode(resData.data.token).grade==="user"?
-        history.push('/addannonce')
+ decode(resData.data.token).grade==="user"?
+        history.push('/addannonce'): history.push('/account')
       })
       .catch((error) => {
         console.log(error.message)

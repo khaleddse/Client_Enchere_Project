@@ -1,9 +1,10 @@
 import Login from "./pages/Auth/Login";
-import Signup from "./pages/Auth/Sinup";
+import Signup from "./pages/Auth/Signup";
 import StripeContainer from "./pages/Stripe/StripeContainer";
 import { Route, Switch } from "react-router-dom";
 import Account from "./pages/Account/Account";
 import AddAnnoucement from "./pages/Annoncement/AddAnnoncement";
+//import App from "./pages/Auth/siginin"
 
 const Routes = ({isAuth}) => {
   let routes;

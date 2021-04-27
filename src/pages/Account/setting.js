@@ -33,11 +33,11 @@ const Setting = () => {
   });
   useEffect(() => {
     const user=userInfo||form.values
-    setform((prevstate) => ({
-      ...prevstate,
-      values: user,
+    setform((form) => ({
+      ...form,
+      values:user,
     }))
-  }, []);
+  },[]);
   useEffect(() => {
     const errors = validate(form.values, UpdateAccountSchema);
     setform((formState) => ({
