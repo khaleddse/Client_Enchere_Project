@@ -3,14 +3,15 @@ import Signup from "./pages/Auth/Signup";
 import StripeContainer from "./pages/Stripe/StripeContainer";
 import { Route, Switch } from "react-router-dom";
 import Account from "./pages/Account/Account";
-import AddAnnoucement from "./pages/Annoncement/AddAnnoncement";
-//import App from "./pages/Auth/siginin"
+import AddAnnoucement from "./pages/Annoncement/AddAnnoncment"
+
 
 const Routes = ({isAuth}) => {
   let routes;
 console.log(isAuth)
   routes = (
     <Switch>
+       
       <Route
         path="/addannonce"
         exact

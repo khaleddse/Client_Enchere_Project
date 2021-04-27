@@ -1,13 +1,12 @@
-import axios from 'axios';
-import {setToken} from "../axios-ordres";
+
+import axios from "../axios-ordres";
 
 
 export const onAddNormalAnnonce = (userid,subcateg_id,cityId, authData) => {
 
-  const token = localStorage.getItem("token");
-  axios.defaults.headers.common["Authorization"] = token;
+  
   return axios
-    .post(`http://localhost:5000/normalAnnounce/add/${userid}/${subcateg_id}/${cityId}`, authData)
+    .post(`/normalAnnounce/add/${userid}/${subcateg_id}/${cityId}`, authData)
     .then((resData) => {
       return resData.data;
     })
@@ -17,11 +16,10 @@ export const onAddNormalAnnonce = (userid,subcateg_id,cityId, authData) => {
     });
 };
 
-export const onAddDrawAnnonce = (subcateg_id,cityId, authData) => {
-  const token = localStorage.getItem("token");
-  setToken(token);
+export const onAddDrawAnnonce = (subcateg_id,cityId,usrid,authData) => {
+ 
   return axios
-    .post(`draw/add/${subcateg_id}/${cityId}`, authData)
+    .post(`draw/add/${usrid}/${subcateg_id}/${cityId}`, authData)
     .then((resData) => {
       return resData.data;
     })
@@ -29,11 +27,10 @@ export const onAddDrawAnnonce = (subcateg_id,cityId, authData) => {
       console.error(err);
     });
 };
-export const onAddEnchereAnnonce = (subcateg_id,cityId, authData) => {
-  const token = localStorage.getItem("token");
-  setToken(token);
+export const onAddEnchereAnnonce = (userid,subcateg_id,cityId, authData) => {
+ 
   return axios
-    .post(`enchere/add/${subcateg_id}/${cityId}`, authData)
+    .post(`enchere/add/${userid}/${subcateg_id}/${cityId}`, authData)
     .then((resData) => {
       return resData.data;
     })
@@ -45,7 +42,7 @@ export const onAddEnchereAnnonce = (subcateg_id,cityId, authData) => {
 export const getUserAnnounces = (id) => {
 
   return axios
-    .get(`http://localhost:5000/announce/user/${id}`)
+    .get(`/announce/user/${id}`)
     .then((resData) => {
       console.log(resData);
       return resData.data;
