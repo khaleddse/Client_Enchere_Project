@@ -73,7 +73,14 @@ import {
             flex={{ base: 1, md: 0 }}
             justify={'flex-end'}
             direction={'row'}
-            spacing={6}>
+            spacing={5}>
+                          
+            <IconButton
+              icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
+              onClick={() => toggleColorMode()}
+              variant="ghost"
+            />
+          
             <Button
               display={localStorage.getItem('token')?'none':'inline-flex' }
               as={'a'}
@@ -83,15 +90,10 @@ import {
               href={'/signin'}>
               Sign In
             </Button>
-            <Box textAlign="right" py={8}>
-            <IconButton
-              icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
-              onClick={() => toggleColorMode()}
-              variant="ghost"
-            />
-          </Box>
+
             <Button
               display={localStorage.getItem('token')?'none':{ base: 'none', md: 'inline-flex' }}
+              w="100%"
               fontSize={'sm'}
               fontWeight={600}
               color={'white'}

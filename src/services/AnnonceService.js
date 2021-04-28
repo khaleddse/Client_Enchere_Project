@@ -16,7 +16,7 @@ export const onAddNormalAnnonce = (userid,subcateg_id,cityId, authData) => {
     });
 };
 
-export const onAddDrawAnnonce = (subcateg_id,cityId,usrid,authData) => {
+export const onAddDrawAnnonce = (usrid,subcateg_id,cityId,authData) => {
  
   return axios
     .post(`draw/add/${usrid}/${subcateg_id}/${cityId}`, authData)
