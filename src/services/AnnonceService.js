@@ -51,3 +51,15 @@ export const getUserAnnounces = (id) => {
       console.error(err);
     });
 };
+
+export const getAllAnnonce=(page)=>{
+  return axios
+  .get(`/announce/?page=${page}`)
+  .then((resData) => {
+    console.log(resData);
+    return resData.data;
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+};

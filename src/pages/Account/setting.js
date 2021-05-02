@@ -12,7 +12,6 @@ import {
 import { useState, useEffect } from "react";
 import validate from "validate.js";
 import avatar from "../../assets/images/avatar.png";
-import { userInfo } from "../../services/utils";
 import { UpdateAccountSchema } from "../util/schema";
 import {updateUser} from "../../services/userServices"
 import decode from "jwt-decode";
@@ -32,12 +31,13 @@ const Setting = () => {
     isAuth: false,
   });
   useEffect(() => {
-    const user=userInfo||form.values
+    const user=decode(localStorage.getItem("token"))||form.values
     setform((form) => ({
       ...form,
       values:user,
     }))
-  },[]);
+  },[]);// eslint-disable-line react-hooks/exhaustive-deps
+
   useEffect(() => {
     const errors = validate(form.values, UpdateAccountSchema);
     setform((formState) => ({
@@ -171,12 +171,13 @@ const Setting = () => {
         </Stack>
 
         {inputs.map((item) => (
-          <HStack spacing={{ base: "1rem", md: "3rem" }} key="">
-            <Text w="10rem" fontSize="md" align="end">
+          <HStack spacing={{ base: "1rem", md: "3rem" }} key={item.name+"Hstack"}>
+            <Text w="10rem" fontSize="md" align="end" key={item.name+"Text"}>
               {item.label}
             </Text>
-            <VStack width="100%">
+            <VStack width="100%" key={item.name+"VStack"}>
               <Input
+              key={item.name}
                 error={hasError(item.name)}
                 onChange={(e) => onChangeHandler(e)}
                 name={item.name}

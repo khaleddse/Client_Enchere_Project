@@ -39,7 +39,7 @@ export const onSingin = (email, password,history) => {
       .then((resData) => {
         dispatch(setData(resData.data));
  decode(resData.data.token).grade==="user"?
-        history.push('/addannonce'): history.push('/account')
+        history.push('/Auccuiel'): history.push('/account')
       })
       .catch((error) => {
         console.log(error.message)

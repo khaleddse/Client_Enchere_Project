@@ -17,8 +17,6 @@ import {
   Button,
   FormHelperText,
   VStack,
-  PhoneIcon,
-  CheckIcon
 } from "@chakra-ui/react";
 //import {CheckIcon,PhoneIcon} from "@chakra-ui/icons";
 import "./Auth.css";

@@ -26,10 +26,11 @@ import {
   import decode from "jwt-decode";
   import {apiBaseUrl} from "../../services/utils"
   import { SunIcon, MoonIcon } from "@chakra-ui/icons";
+import { useHistory } from 'react-router';
   export default function Navbar() {
     const { isOpen, onToggle } = useDisclosure();
     const { colorMode, toggleColorMode } = useColorMode();
-
+let history=useHistory();
     return (
       <Box>
        
@@ -105,12 +106,14 @@ import {
               }}>
               Sign Up
             </Button>
-            <Link
+           {/* <Link
               display={localStorage.getItem('token')? 'inline-flex' :'none'}
-              href={'/account'}
-              >
+              //href={'/account'}
+              onClick={()=>history.push('/account')}
+           >*/}
+              <Button onClick={()=>history.push('/account')}>
               <Avatar size="sm" name="" src={localStorage.getItem('token')&&apiBaseUrl+decode(localStorage.getItem('token')).image} />
-            </Link>
+              </Button>
            
             <Button
               display={!localStorage.getItem('token')?'none':'inline-flex' }

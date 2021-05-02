@@ -9,7 +9,8 @@ const Card=({item})=>{
   const [likes,setLikes]=useState(0)
 useEffect(() => {
   item.likes && setLikes(item.likes.length)
-}, [])
+}, [])// eslint-disable-line react-hooks/exhaustive-deps
+
   const handlechange=()=>{
     if(isOpen)
     setLikes(prevstate=>prevstate-1)

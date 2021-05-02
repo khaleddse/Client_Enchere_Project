@@ -17,7 +17,6 @@ import {
   Radio,
   Select,
   Textarea,
-  HStack,
   StackDivider,
   ThemeProvider,
   theme,
@@ -27,14 +26,11 @@ import {
   InputGroup,
   InputRightElement,
   InputLeftElement,
-  Heading,
   Text,
-  Link,
   FormControl,
   FormLabel,
   Input,
   Stack,
-  Checkbox,
   Button,
   FormHelperText,
   VStack,
@@ -246,7 +242,6 @@ const AddAnnoucement = ({ Listcategories }) => {
                 <VStack width="100%" textAlign="left">
                   <FormLabel color={`teal.500`}>Détail</FormLabel>
                   <Textarea
-                    variant="filled"
                     placeholder="Here is a sample placeholder"
                     size="sm"
                     variant="filled"
