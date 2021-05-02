@@ -1,69 +1,57 @@
-
 import * as actionTypes from "../actions/actionTypes";
 import decode from "jwt-decode";
 import { updateObject } from "../utility";
-
 
 const initialState = {
   isauth: false,
   isauthEmpl: false,
   token: "",
   error: false,
-  user:{},
-  citys:[],
-  listcategorie:[
-    {
-        "subcategs": [
-            {
-                "announces": [],
-                "_id": "6082c08d5c4e9f2458b035d1",
-                "nom": "bmw",
-                
-            }
-        ],
-        "_id": "6082c0705c4e9f2458b035d0",
-        "nom": "voiture",
-        
-    }
-],
+  user: {},
+  citys: [],
+  IslodingConnection: false,
 };
 
-
 const login = (state, action) => {
-  const token=action.login_data.token
+  const token = action.login_data.token;
   localStorage.setItem("token", token);
   return updateObject(state, {
     token: token,
-    user:decode(token),
-    isauth:true,
-  
+    user: decode(token),
+    isauth: true,
+    IslodingConnection: false,
   });
 };
-const Failed_Auth =(state, action) => {
+const Failed_Auth = (state, action) => {
   localStorage.removeItem("token");
   return updateObject(state, {
     token: "",
     isauth: false,
     isauthEmpl: false,
     error: true,
-   
+    IslodingConnection: false,
+  });
+};
 
-});
-}
+const IsLodings = (state, action) => {
+  return updateObject(state, {
+    IslodingConnection: true,
+  });
+};
 
-//const onSignup=(state,action)=>{
-
-//}
-
-const reducer = ( state =initialState ,  action) => {
+const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case actionTypes.SET_DATA:return login(state , action);
-    case actionTypes.AUTH_FAILED:return Failed_Auth(state, action);
+    case actionTypes.SET_DATA:
+      return login(state, action);
+    case actionTypes.AUTH_FAILED:
+      return Failed_Auth(state, action);
+    case actionTypes.ISLOADING:
+      return IsLodings(state, action);
     //case actionTypes.SIGNUP: return onSignup(state , action);
     //case actionTypes.FETCH_INGREDIENTS_FAILED: return fetchIngredientsFailed(state, action);
-    default: return state;
+    default:
+      return state;
   }
-  
 };
 
 export default reducer;

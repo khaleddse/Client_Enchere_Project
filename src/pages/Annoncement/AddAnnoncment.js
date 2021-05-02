@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from "react";
 import ImageUploader from "react-images-upload";
 import { AddAnnouncementSchema } from "../util/schema";
-import { onAddNormalAnnonce ,onAddEnchereAnnonce,onAddDrawAnnonce } from "../../services/AnnonceService";
+import {
+  onAddNormalAnnonce,
+  onAddEnchereAnnonce,
+  onAddDrawAnnonce,
+} from "../../services/AnnonceService";
 import decode from "jwt-decode";
 import validate from "validate.js";
 import { regions } from "./data";
-import  {connect}  from "react-redux";
+import { connect } from "react-redux";
 
 import {
- NumberInput,
+  NumberInput,
   NumberInputField,
   NumberInputStepper,
   NumberIncrementStepper,
@@ -17,7 +21,6 @@ import {
   Radio,
   Select,
   Textarea,
-  HStack,
   StackDivider,
   ThemeProvider,
   theme,
@@ -27,19 +30,17 @@ import {
   InputGroup,
   InputRightElement,
   InputLeftElement,
-  Heading,
   Text,
-  Link,
   FormControl,
   FormLabel,
   Input,
   Stack,
-  Checkbox,
   Button,
   FormHelperText,
   VStack,
 } from "@chakra-ui/react";
 import { CheckIcon, PhoneIcon } from "@chakra-ui/icons";
+import { useHistory } from "react-router";
 
 const AddAnnoucement = ({ Listcategories }) => {
   const [isLoading, setisLoading] = useState(false);
@@ -69,9 +70,7 @@ const AddAnnoucement = ({ Listcategories }) => {
     errors: {},
     touched: {},
   });
-  useEffect(() => {
-    console.log("dispatch second backend call");
-  }, []);
+
   useEffect(() => {
     const errors = validate(formState.values, AddAnnouncementSchema);
 
@@ -91,8 +90,11 @@ const AddAnnoucement = ({ Listcategories }) => {
       },
     }));
   };
+
   const token = localStorage.getItem("token");
   const user = decode(token);
+
+  let history = useHistory();
 
   const submitFormHandler = async (e) => {
     e.preventDefault();
@@ -110,32 +112,38 @@ const AddAnnoucement = ({ Listcategories }) => {
     if (formState.values.image) {
       form.append("image", formState.values.image[0]);
     }
-    if(value==="Normal"){
-     form.append("price", formState.values.price);
-     await onAddNormalAnnonce(
+    if (value === "Normal") {
+      form.append("price", formState.values.price);
+      await onAddNormalAnnonce(
         user.userId,
         subcategId,
         formState.values.city.id,
         form
-      )
+      );
       setisLoading(false);
-   
-    }else if(value==="Enchére"){
-        form.append("initial_price",formState.values.initial_price)
-        form.append("end_Date", formState.values.end_Date)
-        console.log("enchere")
-        await onAddEnchereAnnonce( user.userId,subcategId,formState.values.city.id,form)
-        setisLoading(false);
-    }else{
-        console.log("Draw")
-        form.append("max_participants_number", maxparticipants)
-        form.append("participation_price", formState.values.participation_price)  
-        await onAddDrawAnnonce(user.userId,subcategId,formState.values.city.id,form)
-        setisLoading(false);
+    } else if (value === "Enchére") {
+      form.append("initial_price", formState.values.initial_price);
+      form.append("end_Date", formState.values.end_Date);
+      await onAddEnchereAnnonce(
+        user.userId,
+        subcategId,
+        formState.values.city.id,
+        form
+      );
+      setisLoading(false);
+    } else {
+      form.append("max_participants_number", maxparticipants);
+      form.append("participation_price", formState.values.participation_price);
+      await onAddDrawAnnonce(
+        user.userId,
+        subcategId,
+        formState.values.city.id,
+        form
+      );
+      setisLoading(false);
     }
-}
-  
-
+    history.push("/Accuiel");
+  };
 
   const inputChangeHandler = (e) => {
     e.persist();
@@ -194,7 +202,6 @@ const AddAnnoucement = ({ Listcategories }) => {
       }));
     }
   };
-
   const hasError = (field) => {
     return formState.touched[field] && formState.errors[field] ? true : false;
   };
@@ -246,7 +253,6 @@ const AddAnnoucement = ({ Listcategories }) => {
                 <VStack width="100%" textAlign="left">
                   <FormLabel color={`teal.500`}>Détail</FormLabel>
                   <Textarea
-                    variant="filled"
                     placeholder="Here is a sample placeholder"
                     size="sm"
                     variant="filled"
@@ -281,8 +287,8 @@ const AddAnnoucement = ({ Listcategories }) => {
                 </InputGroup>
               </VStack>
               <FormLabel color={`teal.500`}>
-                  <Text color="teal.500">Type_Annonce</Text>
-                </FormLabel>
+                <Text color="teal.500">Type_Annonce</Text>
+              </FormLabel>
               <RadioGroup onChange={setValue} value={value}>
                 <Stack direction="row">
                   <Radio value="Normal">Normal</Radio>
@@ -326,54 +332,51 @@ const AddAnnoucement = ({ Listcategories }) => {
                 <div>
                   <FormControl>
                     <VStack width="100%">
-                      <FormLabel color={`teal.500`}>Enter date_fin  Enchére</FormLabel>
+                      <FormLabel color={`teal.500`}>
+                        Enter date_fin Enchére
+                      </FormLabel>
                       <Input
                         variant="filled"
                         placeholder="mm/dd/yyyy"
                         name="end_Date"
-                        
                         onChange={inputChangeHandler}
                         value={formState.values.end_Date}
                       />
-                      
                     </VStack>
                   </FormControl>
                   <VStack width="100%" textAlign="left">
-                  <FormLabel color={`teal.500`}>
-                    <Text color="teal.500">initial_price</Text>
-                  </FormLabel>
+                    <FormLabel color={`teal.500`}>
+                      <Text color="teal.500">initial_price</Text>
+                    </FormLabel>
 
-                  <InputGroup>
-                    <InputLeftElement
-                      pointerEvents="none"
-                      color="teal.500"
-                      fontSize="1.2em"
-                      children="DT"
-                    />
-                    <Input
-                      placeholder="Enter amount"
-                      variant="filled"
-                      name="initial_price"
-                      
-                      onChange={inputChangeHandler}
-                      value={formState.values.initial_price}
-                    />
-                    {hasError("price") && (
-                      <FormHelperText color="red">
-                        {formState.errors.price[0]}
-                      </FormHelperText>
-                    )}
+                    <InputGroup>
+                      <InputLeftElement
+                        pointerEvents="none"
+                        color="teal.500"
+                        fontSize="1.2em"
+                        children="DT"
+                      />
+                      <Input
+                        placeholder="Enter amount"
+                        variant="filled"
+                        name="initial_price"
+                        onChange={inputChangeHandler}
+                        value={formState.values.initial_price}
+                      />
+                      {hasError("price") && (
+                        <FormHelperText color="red">
+                          {formState.errors.price[0]}
+                        </FormHelperText>
+                      )}
 
-                    <InputRightElement
-                      children={<CheckIcon color="teal.500" />}
-                    />
+                      <InputRightElement
+                        children={<CheckIcon color="teal.500" />}
+                      />
                     </InputGroup>
-                </VStack>
-                
+                  </VStack>
                 </div>
               ) : (
                 value === "Draw" && (
-
                   <FormControl>
                     <VStack width="100%">
                       <FormLabel color={`teal.500`}>
@@ -387,39 +390,40 @@ const AddAnnoucement = ({ Listcategories }) => {
                         onChange={setMaxparticiPants}
                       >
                         <NumberInputField />
-                        <NumberInputStepper >
-                          <NumberIncrementStepper value={formState.values.max_participants_number}/>
-                          <NumberDecrementStepper value={formState.values.max_participants_number}/>
+                        <NumberInputStepper>
+                          <NumberIncrementStepper
+                            value={formState.values.max_participants_number}
+                          />
+                          <NumberDecrementStepper
+                            value={formState.values.max_participants_number}
+                          />
                         </NumberInputStepper>
                       </NumberInput>
                     </VStack>
                     <VStack width="100%" textAlign="left">
-                  <FormLabel color={`teal.500`}>
-                    <Text color="teal.500">initial_price</Text>
-                  </FormLabel>
-                    <InputGroup>
-                    
-                    <InputLeftElement
-                      pointerEvents="none"
-                      color="teal.500"
-                      fontSize="1.2em"
-                      children="DT"
-                    />
-                    <Input
-                      placeholder="Participation_Price"
-                      variant="filled"
-                      name="participation_price"
-                     
-                      onChange={inputChangeHandler}
-                      value={formState.values.participation_price}
-                    />
-                    
+                      <FormLabel color={`teal.500`}>
+                        <Text color="teal.500">initial_price</Text>
+                      </FormLabel>
+                      <InputGroup>
+                        <InputLeftElement
+                          pointerEvents="none"
+                          color="teal.500"
+                          fontSize="1.2em"
+                          children="DT"
+                        />
+                        <Input
+                          placeholder="Participation_Price"
+                          variant="filled"
+                          name="participation_price"
+                          onChange={inputChangeHandler}
+                          value={formState.values.participation_price}
+                        />
 
-                    <InputRightElement
-                      children={<CheckIcon color="teal.500" />}
-                    />
-                  </InputGroup>
-                  </VStack>
+                        <InputRightElement
+                          children={<CheckIcon color="teal.500" />}
+                        />
+                      </InputGroup>
+                    </VStack>
                   </FormControl>
                 )
               )}
@@ -513,10 +517,8 @@ const mapStateToProps = (state) => {
     // auth:state.isauth,
     usr: state.users.user,
     err: state.users.error,
-    Listcategories: state.users.listcategorie,
-  }
+    Listcategories: state.annoncement.listcategorie,
+  };
 };
-
-
 
 export default connect(mapStateToProps)(AddAnnoucement);

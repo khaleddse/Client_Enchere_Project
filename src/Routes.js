@@ -4,14 +4,18 @@ import StripeContainer from "./pages/Stripe/StripeContainer";
 import { Route, Switch } from "react-router-dom";
 import Account from "./pages/Account/Account";
 import AddAnnoucement from "./pages/Annoncement/AddAnnoncment"
-
+import AnnoncmentPage from "./pages/Annoncement/AnnoncementPage"
 
 const Routes = ({isAuth}) => {
   let routes;
 console.log(isAuth)
   routes = (
     <Switch>
-       
+       <Route
+        path="/Accuiel"
+        exact
+        render={(props) => <AnnoncmentPage {...props} />}
+      />
       <Route
         path="/addannonce"
         exact

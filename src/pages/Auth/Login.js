@@ -17,12 +17,9 @@ import {
   Button,
   FormHelperText,
   VStack,
-  PhoneIcon,
-  CheckIcon
 } from "@chakra-ui/react";
 //import {CheckIcon,PhoneIcon} from "@chakra-ui/icons";
 import "./Auth.css";
-
 
 import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router-dom";
@@ -31,13 +28,12 @@ import { connect } from "react-redux";
 import { signInSchema } from "../util/schema";
 import validate from "validate.js";
 
-const LoginForm = ({ onLoginHandler, history, err }) => {
+const LoginForm = ({ onLoginHandler, history, err, IsLoding }) => {
   const VARIANT_COLOR = "teal";
 
   const [show, setShow] = React.useState(false);
   const handleClick = () => setShow(!show);
 
-  const [isLoading, setIsLoading] = useState(false);
   const [formState, setFormState] = useState({
     values: {
       email: "",
@@ -77,9 +73,7 @@ const LoginForm = ({ onLoginHandler, history, err }) => {
 
   const submitFormHandler = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
     onLoginHandler(formState.values.email, formState.values.password, history);
-    setIsLoading(false);
   };
 
   return (
@@ -100,7 +94,6 @@ const LoginForm = ({ onLoginHandler, history, err }) => {
           textAlign="center"
           boxShadow="lg"
         >
-          
           <Box p={4}>
             <Box textAlign="center">
               <Heading>Sign In to Your Account</Heading>
@@ -167,12 +160,13 @@ const LoginForm = ({ onLoginHandler, history, err }) => {
                   </Box>
                 </Stack>
                 <Button
+                 isLoading={IsLoding}
                   colorScheme="teal"
                   type="submit"
                   variant="solid"
                   width="full"
                   mt={4}
-                  isLoading={isLoading}
+                 
                 >
                   Sign In
                 </Button>
@@ -189,6 +183,7 @@ const mapStateToProps = (state) => {
     auth: state.users.isauth,
     err: state.users.error,
     linto: state.users.link,
+    IsLoding: state.users.IslodingConnection,
   };
 };
 const mapDispatchToProps = (dispatch) => {

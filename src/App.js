@@ -7,7 +7,7 @@ function App({auth}) {
  
   return (
     <ChakraProvider>
-      <Navbar/>
+    <Navbar/>
     <Route isAuth={auth}/>
     <Footer/>
     </ChakraProvider>
