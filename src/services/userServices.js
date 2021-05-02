@@ -2,7 +2,6 @@ import { setToken } from "../axios-ordres";
 import axios from 'axios'
 export const updateUser = (updateData) => {
     const token = localStorage.getItem("token");
-    console.log(updateData);
     setToken(token);
     return axios
       .put("http://localhost:5000/user/update", updateData)

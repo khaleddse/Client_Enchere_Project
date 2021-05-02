@@ -1,7 +1,7 @@
-import { Box, Stack, ButtonGroup, IconButton ,Text } from "@chakra-ui/react";
-import { FaGithub, FaLinkedin, FaTwitter } from 'react-icons/fa'
+import { Box, Stack, ButtonGroup, IconButton, Text } from "@chakra-ui/react";
+import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
 
- const Footer = () => (
+const Footer = () => (
   <Box
     as="footer"
     role="contentinfo"
@@ -12,9 +12,7 @@ import { FaGithub, FaLinkedin, FaTwitter } from 'react-icons/fa'
   >
     <Stack>
       <Stack direction="row" spacing="4" align="center" justify="space-between">
-          <Text fontSize="lg">
-              Enchere
-          </Text>
+        <Text fontSize="lg">Enchere</Text>
         <ButtonGroup variant="ghost" color="gray.600">
           <IconButton
             as="a"

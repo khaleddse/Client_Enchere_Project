@@ -13,7 +13,7 @@ import { useState, useEffect } from "react";
 import validate from "validate.js";
 import avatar from "../../assets/images/avatar.png";
 import { UpdateAccountSchema } from "../util/schema";
-import {updateUser} from "../../services/userServices"
+import { updateUser } from "../../services/userServices";
 import decode from "jwt-decode";
 
 const Setting = () => {
@@ -31,12 +31,12 @@ const Setting = () => {
     isAuth: false,
   });
   useEffect(() => {
-    const user=decode(localStorage.getItem("token"))||form.values
+    const user = decode(localStorage.getItem("token")) || form.values;
     setform((form) => ({
       ...form,
-      values:user,
-    }))
-  },[]);// eslint-disable-line react-hooks/exhaustive-deps
+      values: user,
+    }));
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const errors = validate(form.values, UpdateAccountSchema);
@@ -67,14 +67,12 @@ const Setting = () => {
     formData.append("firstname", form.values.firstname);
     formData.append("lastname", form.values.lastname);
     formData.append("phone", form.values.phone);
+
     if (form.values.localimage) {
-      console.log(form.values.image)
       formData.append("image", form.values.image);
     }
     try {
-      const { token } = await updateUser(
-        formData
-      );
+      const { token } = await updateUser(formData);
 
       setform((prevstate) => ({
         ...prevstate,
@@ -82,9 +80,9 @@ const Setting = () => {
         isValid: false,
         error: {},
         touched: {},
-      }))
+      }));
       //setUserHandler(decode(token));
-     // setIsSucceed(true);
+      // setIsSucceed(true);
     } catch (err) {
       throw err;
     }
@@ -124,7 +122,7 @@ const Setting = () => {
       values: {
         ...prevstate.values,
         image: event.target.files[0],
-        localimage:URL.createObjectURL(event.target.files[0])
+        localimage: URL.createObjectURL(event.target.files[0]),
       },
       touched: {
         ...prevstate.touched,
@@ -150,7 +148,12 @@ const Setting = () => {
           <Avatar
             size="xl"
             name={form.values.firstname + " " + form.values.lastname}
-            src={form.values.localimage?form.values.localimage:(form.values.image?"http://localhost:5000/"+form.values.image:avatar)
+            src={
+              form.values.localimage
+                ? form.values.localimage
+                : form.values.image
+                ? "http://localhost:5000/" + form.values.image
+                : avatar
             }
           />
           <HStack>
@@ -171,14 +174,18 @@ const Setting = () => {
         </Stack>
 
         {inputs.map((item) => (
-          <HStack spacing={{ base: "1rem", md: "3rem" }} key={item.name+"Hstack"}>
-            <Text w="10rem" fontSize="md" align="end" key={item.name+"Text"}>
+          <HStack
+            spacing={{ base: "1rem", md: "3rem" }}
+            key={item.name + "Hstack"}
+          >
+            <Text w="10rem" fontSize="md" align="end" key={item.name + "Text"}>
               {item.label}
             </Text>
-            <VStack width="100%" key={item.name+"VStack"}>
+            <VStack width="100%" key={item.name + "VStack"}>
               <Input
-              key={item.name}
-                error={hasError(item.name)}
+                key={item.name}
+                id={item.name}
+                isInvalid={hasError(item.name)}
                 onChange={(e) => onChangeHandler(e)}
                 name={item.name}
                 variant="outline"
@@ -204,7 +211,7 @@ const Setting = () => {
               bg: "pink.300",
             }}
             disabled={!form.isValid}
-            onClick={e=>updateHandler(e)}
+            onClick={(e) => updateHandler(e)}
           >
             Save Changes
           </Button>

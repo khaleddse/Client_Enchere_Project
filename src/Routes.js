@@ -12,7 +12,7 @@ console.log(isAuth)
   routes = (
     <Switch>
        <Route
-        path="/Auccuiel"
+        path="/Accuiel"
         exact
         render={(props) => <AnnoncmentPage {...props} />}
       />
