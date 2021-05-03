@@ -1,7 +1,7 @@
 import Login from "./pages/Auth/Login";
 import Signup from "./pages/Auth/Signup";
 import StripeContainer from "./pages/Stripe/StripeContainer";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch,Redirect } from "react-router-dom";
 import Account from "./pages/Account/Account";
 import AddAnnoucement from "./pages/Annoncement/AddAnnoncment"
 import AnnoncmentPage from "./pages/Annoncement/AnnoncementPage"
@@ -11,6 +11,7 @@ const Routes = ({isAuth}) => {
 console.log(isAuth)
   routes = (
     <Switch>
+     
        <Route
         path="/Accuiel"
         exact
@@ -29,7 +30,9 @@ console.log(isAuth)
         render={(props) => <StripeContainer {...props} />}
       />
       <Route path="/account" exact render={(props) => <Account {...props} />} />
+      <Redirect to="/Accuiel" />
     </Switch>
+    
   );
 
   return routes;
