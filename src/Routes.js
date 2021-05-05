@@ -5,7 +5,7 @@ import { Route, Switch,Redirect } from "react-router-dom";
 import Account from "./pages/Account/Account";
 import AddAnnoucement from "./pages/Annoncement/AddAnnoncment"
 import AnnoncmentPage from "./pages/Annoncement/AnnoncementPage"
-
+import ContactUs from "./pages/avis/ContactUs"
 const Routes = ({isAuth}) => {
   let routes;
 console.log(isAuth)
@@ -13,9 +13,14 @@ console.log(isAuth)
     <Switch>
      
        <Route
-        path="/Accuiel"
+        path="/accueil"
         exact
         render={(props) => <AnnoncmentPage {...props} />}
+      />
+      <Route
+        path="/avis"
+        exact
+        render={(props) => <ContactUs {...props} />}
       />
       <Route
         path="/addannonce"
