@@ -1,26 +1,28 @@
 import Login from "./pages/Auth/Login";
 import Signup from "./pages/Auth/Signup";
 import StripeContainer from "./pages/Stripe/StripeContainer";
-import { Route, Switch,Redirect } from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
 import Account from "./pages/Account/Account";
-import AddAnnoucement from "./pages/Annoncement/AddAnnoncment"
-import AnnoncmentPage from "./pages/Annoncement/AnnoncementPage"
-import ContactUs from "./pages/avis/ContactUs"
-const Routes = ({isAuth}) => {
+import AddAnnoucement from "./pages/Annoncement/AddAnnoncment";
+import AnnoncmentPage from "./pages/Annoncement/AnnoncementPage";
+import ContactUs from "./pages/avis/ContactUs";
+import ListAvis from "./pages/avis/ListAvis";
+
+const Routes = ({ isAuth }) => {
   let routes;
-console.log(isAuth)
+  console.log(isAuth);
   routes = (
     <Switch>
-     
-       <Route
+      <Route
         path="/accueil"
         exact
         render={(props) => <AnnoncmentPage {...props} />}
       />
+      <Route path="/contactus" exact render={(props) => <ContactUs {...props} />} />
       <Route
         path="/avis"
         exact
-        render={(props) => <ContactUs {...props} />}
+        render={(props) => <ListAvis {...props} />}
       />
       <Route
         path="/addannonce"
@@ -37,7 +39,6 @@ console.log(isAuth)
       <Route path="/account" exact render={(props) => <Account {...props} />} />
       <Redirect to="/Accuiel" />
     </Switch>
-    
   );
 
   return routes;
