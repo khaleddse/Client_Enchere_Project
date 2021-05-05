@@ -200,9 +200,9 @@ const Setting = () => {
             </VStack>
           </HStack>
         ))}
-        <HStack justify="center">
+        <HStack justifyContent="flex-end">
           <Button
-            mt="3rem"
+
             fontSize={"sm"}
             fontWeight={600}
             color={"white"}
