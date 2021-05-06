@@ -8,7 +8,7 @@ import * as annonceAction from "../../store/actions/index";
 import { Spinner, Stack } from "@chakra-ui/react";
 import { Button } from "@chakra-ui/react";
 import { useHistory } from "react-router";
-import openSocket from 'socket.io-client';
+import openSocket from "socket.io-client";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -35,20 +35,23 @@ const AnnoncmentPage = ({
   let history = useHistory();
 
   useEffect(() => {
-  
     ongetAnnoncmentHandler(page);
 
     ongetUserAnnoncmentHandler(usr.userId);
 
     ongetAllCategories();
-   const socket= openSocket('http://localhost:5000');
-    socket.on('posts', data => {
-      if (data.action === 'create') {
-        console.log("socket test")
-        ongetAnnoncmentHandler()
+
+    const socket = openSocket("http://localhost:5000");
+    socket.on("posts", (data) => {
+      if (data.action === "create") {
+        console.log("socket test");
+        ongetAnnoncmentHandler();
+      } else if (data.action === "update") {
+        ongetAnnoncmentHandler();
+      } else if (data.action === "delete") {
+        ongetAnnoncmentHandler();
       }
     });
-   
   }, [page]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const pagesNumber = counts;

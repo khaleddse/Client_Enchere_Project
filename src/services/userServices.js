@@ -1,10 +1,10 @@
 import { setToken } from "../axios-ordres";
-import axios from 'axios'
+import axios from '../axios-ordres'
 export const updateUser = (updateData) => {
     const token = localStorage.getItem("token");
     setToken(token);
     return axios
-      .put("http://localhost:5000/user/update", updateData)
+      .put("/user/update", updateData)
       .then((resData) => {
         localStorage.removeItem("token");
         localStorage.setItem("token", resData.data.token);
@@ -15,3 +15,28 @@ export const updateUser = (updateData) => {
         console.error(err);
       });
   };
+
+
+  export const getAllUser=()=>{
+
+    return axios 
+    .get('/user/')
+    .then(({data})=>{
+return data
+    })
+    .catch((err)=>{
+      console.error(err.message)
+    })
+  }
+
+  export const DelteUser=(id)=>{
+    
+  return axios
+  .delete(`/user/${id}`)
+  .then(({data})=>{
+    return data
+  })
+  .catch((err)=>{
+    console.error(err.message)
+  })
+  }
