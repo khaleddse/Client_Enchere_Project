@@ -41,8 +41,13 @@ import {
 } from "@chakra-ui/react";
 import { CheckIcon, PhoneIcon } from "@chakra-ui/icons";
 import { useHistory } from "react-router";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const AddAnnoucement = ({ Listcategories }) => {
+
+  const [startDate, setStartDate] = useState(new Date());
+  console.log(startDate)
   const [isLoading, setisLoading] = useState(false);
   const [value, setValue] = useState("Normal");
   const [maxparticipants, setMaxparticiPants] = useState("");
@@ -123,7 +128,7 @@ const AddAnnoucement = ({ Listcategories }) => {
       setisLoading(false);
     } else if (value === "Enchére") {
       form.append("initial_price", formState.values.initial_price);
-      form.append("end_Date", formState.values.end_Date);
+      form.append("end_Date", startDate);
       await onAddEnchereAnnonce(
         user.userId,
         subcategId,
@@ -335,15 +340,15 @@ const AddAnnoucement = ({ Listcategories }) => {
                       <FormLabel color={`teal.500`}>
                         Enter date_fin Enchére
                       </FormLabel>
-                      <Input
-                        variant="filled"
-                        placeholder="mm/dd/yyyy"
-                        name="end_Date"
-                        onChange={inputChangeHandler}
-                        value={formState.values.end_Date}
-                      />
+                     <DatePicker selected={startDate} 
+                     onChange={date => setStartDate(date)}
+                     dateFormat='dd/MM/yyyy'
+                     minDate={new Date()}
+                     isClearable
+                   />
                     </VStack>
                   </FormControl>
+                   
                   <VStack width="100%" textAlign="left">
                     <FormLabel color={`teal.500`}>
                       <Text color="teal.500">initial_price</Text>

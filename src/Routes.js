@@ -5,13 +5,23 @@ import { Route, Switch,Redirect } from "react-router-dom";
 import Account from "./pages/Account/Account";
 import AddAnnoucement from "./pages/Annoncement/AddAnnoncment"
 import AnnoncmentPage from "./pages/Annoncement/AnnoncementPage"
-
+import ListUser from "./pages/PersonnePage/ListUser";
+import ListAdmin from "./pages/PersonnePage/ListAdmin";
 const Routes = ({isAuth}) => {
   let routes;
 console.log(isAuth)
   routes = (
     <Switch>
-     
+     <Route
+        path="/adminList"
+        exact
+        render={(props) => <ListAdmin{...props} />}
+      />
+     <Route
+        path="/userList"
+        exact
+        render={(props) => <ListUser {...props} />}
+      />
        <Route
         path="/Accuiel"
         exact
