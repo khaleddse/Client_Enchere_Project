@@ -8,11 +8,24 @@ import AnnoncmentPage from "./pages/Annoncement/AnnoncementPage"
 import ListUser from "./pages/PersonnePage/ListUser";
 import ListAdmin from "./pages/PersonnePage/ListAdmin";
 import CardPoint from "./components/UI/CardPoint"
+import ContactUs from "./pages/avis/ContacUs"
+import ListAvis from "./pages/avis/ListAvis"
+
 const Routes = ({isAuth}) => {
   let routes;
 console.log(isAuth)
   routes = (
     <Switch>
+      <Route
+        path="/avis"
+        exact
+        render={(props) => <ListAvis{...props} />}
+      />
+      <Route
+        path="/contactus"
+        exact
+        render={(props) => <ContactUs{...props} />}
+      />
       <Route
         path="/carte"
         exact

@@ -11,11 +11,10 @@ import {
   Popover,
   PopoverTrigger,
   PopoverContent,
-  useColorModeValue,
   useBreakpointValue,
+  useColorModeValue,
   useDisclosure,
   Avatar,
-  useColorMode,
   Heading,
   Tfoot,
   Tr,
@@ -24,6 +23,8 @@ import {
   Tbody,
   Td,
   Table,
+  LinkBox,
+  LinkOverlay,
 } from "@chakra-ui/react";
 
 import {
@@ -39,7 +40,6 @@ import Badge from "@material-ui/core/Badge";
 import AddShoppingCartOutlinedIcon from "@material-ui/icons/AddShoppingCartOutlined";
 import decode from "jwt-decode";
 import { apiBaseUrl } from "../../services/utils";
-import { SunIcon, MoonIcon } from "@chakra-ui/icons";
 import { useHistory } from "react-router";
 import React from "react";
 
@@ -53,15 +53,11 @@ import * as CarteAction from "../../store/actions/index";
 
 const Navbar = ({ item, totalptice, moreItemsHandler, removeItemsHandler }) => {
   const { isOpen, onToggle } = useDisclosure();
-  const { colorMode, toggleColorMode } = useColorMode();
   let history = useHistory();
-
   const [open, setOpen] = React.useState(false);
-
   const handleClickOpen = () => {
     setOpen(true);
   };
-
   const handleClose = () => {
     setOpen(false);
   };
@@ -97,7 +93,7 @@ const Navbar = ({ item, totalptice, moreItemsHandler, removeItemsHandler }) => {
         <Flex
           flex={{ base: 1, md: "auto" }}
           ml={{ base: -2 }}
-          display={{ base: "flex", md: "auto" }}
+          display={{ base: "flex", md: "none" }}
         >
           <IconButton
             onClick={onToggle}
@@ -109,14 +105,16 @@ const Navbar = ({ item, totalptice, moreItemsHandler, removeItemsHandler }) => {
           />
         </Flex>
         <Flex flex={{ base: 1 }} justify={{ base: "center", md: "start" }}>
-          <Text
+          <LinkBox>
+          <LinkOverlay
+            href="/"
             textAlign={useBreakpointValue({ base: "center", md: "left" })}
             fontFamily={"heading"}
             color={useColorModeValue("gray.800", "white")}
           >
             Enchere
-          </Text>
-
+          </LinkOverlay>
+          </LinkBox>
           <Flex display={{ base: "none", md: "flex" }} ml={10}>
             <DesktopNav />
           </Flex>
@@ -128,171 +126,158 @@ const Navbar = ({ item, totalptice, moreItemsHandler, removeItemsHandler }) => {
           direction={"row"}
           spacing={5}
         >
-          <IconButton
-            icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
-            onClick={() => toggleColorMode()}
-            variant="ghost"
-          />
+          {localStorage.getItem("token") ? (
+            <>
+              <IconButton
+                display="inline-flex"
+                onClick={handleClickOpen}
+                icon={
+                  <Badge badgeContent={NumberItemShop} color="secondary">
+                    <AddShoppingCartOutlinedIcon />
+                  </Badge>
+                }
+                variant={"ghost"}
+                aria-label={"Toggle Navigation"}
+              />
+              <Avatar
+                as="button"
+                onClick={() => history.push("/account")}
+                display="inline-flex"
+                size="sm"
+                name=""
+                src={
+                  localStorage.getItem("token") &&
+                  apiBaseUrl + decode(localStorage.getItem("token")).image
+                }
+              />
+              <Button
+                display="inline-flex"
+                fontWeight={400}
+                variant={"link"}
+                onClick={() => {
+                  localStorage.removeItem("token");
+                  window.location.replace("/signin");
+                }}
+              >
+                Logout
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                display={localStorage.getItem("token") ? "none" : "inline-flex"}
+                as={"a"}
+                fontSize={"sm"}
+                fontWeight={400}
+                variant={"link"}
+                href={"/signin"}
+              >
+                Sign In
+              </Button>
 
-          <IconButton
-            onClick={handleClickOpen}
-            icon={
-              <Badge badgeContent={NumberItemShop} color="secondary">
-                <AddShoppingCartOutlinedIcon />
-              </Badge>
-            }
-            variant={"ghost"}
-            aria-label={"Toggle Navigation"}
-          />
-          <div>
-            <Dialog
-              open={open}
-              keepMounted
-              onClose={handleClose}
-              aria-labelledby="alert-dialog-slide-title"
-              aria-describedby="alert-dialog-slide-description"
-            >
-              <DialogTitle id="alert-dialog-slide-title">
-                Enchere Tunise vente Achat en ligne
-              </DialogTitle>
-              <DialogContent>
-                <DialogContentText id="alert-dialog-slide-description">
-                 
-                    <Table variant="simple">
-                      <Thead>
-                        <Tr>
-                          <Th>PACK </Th>
-                          <Th>Price</Th>
-                          <Th isNumeric>Amount</Th>
-                          <Th>Total Price by Pack</Th>
-                          <Th> </Th>
-                        </Tr>
-                      </Thead>
-                      {item.map(({ name, price, amount, id }) => {
-                        return (
-                          
-                            <Tbody>
-                              <Tr>
-                                <Td>{name}</Td>
-                                <Td>{price}dt</Td>
-                                <Td>x{amount}</Td>
-                                <Td> {amount * price}</Td>
-                                <Td>
-                                  <Flex>
-                                    <IconButton
-                                      onClick={() => removeItemsHandler(id)}
-                                      variant="outline"
-                                      colorScheme="red.500"
-                                      aria-label="add more"
-                                      icon={<MinusIcon />}
-                                    />
-                                    <IconButton
-                                      onClick={() =>
-                                        moreItemHandler(id, price, name, 1)
-                                      }
-                                      variant="outline"
-                                      colorScheme="red.500"
-                                      aria-label="add more"
-                                      icon={<SmallAddIcon />}
-                                    />
-                                  </Flex>
-                                </Td>
-                              </Tr>
-                            </Tbody>
-                          
-                        );
-                      })}
-                      <Tfoot>
-                        <Tr>
-                          <Th> </Th>
-                          <Th> Price </Th>
-                          <Th> Totale:</Th>
-                          <Th>{totalptice}</Th>
-                        </Tr>
-                      </Tfoot>
-                    </Table>
-               
-                </DialogContentText>
-                <Heading>total price :{totalptice}</Heading>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={handleClose} color="primary">
-                  Cancel
-                </Button>
-
-                {hasItems && (
-                  <Button onClick={handleClose} color="primary">
-                    Order
-                  </Button>
-                )}
-              </DialogActions>
-            </Dialog>
-          </div>
-
-          <Button
-            display={localStorage.getItem("token") ? "none" : "inline-flex"}
-            as={"a"}
-            fontSize={"sm"}
-            fontWeight={400}
-            variant={"link"}
-            href={"/signin"}
-          >
-            Sign In
-          </Button>
-
-          <Button
-            display={
-              localStorage.getItem("token")
-                ? "none"
-                : { base: "none", md: "inline-flex" }
-            }
-            w="100%"
-            fontSize={"sm"}
-            fontWeight={600}
-            color={"white"}
-            bg={"pink.400"}
-            variant={"link"}
-            href={"/signup"}
-            _hover={{
-              bg: "pink.300",
-            }}
-          >
-            Sign Up
-          </Button>
-          {/* <Link
-              display={localStorage.getItem('token')? 'inline-flex' :'none'}
-              //href={'/account'}
-              onClick={()=>history.push('/account')}
-           >*/}
-          <Button onClick={() => history.push("/account")}>
-            <Avatar
-              size="sm"
-              name=""
-              src={
-                localStorage.getItem("token") &&
-                apiBaseUrl + decode(localStorage.getItem("token")).image
-              }
-            />
-          </Button>
-
-          <Button
-            display={!localStorage.getItem("token") ? "none" : "inline-flex"}
-            fontSize={"sm"}
-            fontWeight={400}
-            variant={"link"}
-            onClick={() => {
-              localStorage.removeItem("token");
-              window.location.replace("/signin");
-            }}
-          >
-            Logout
-          </Button>
+              <Button
+                display={{ base: "none", md: "inline-flex" }}
+                w="100%"
+                fontSize={"sm"}
+                fontWeight={600}
+                color={"white"}
+                bg={"pink.400"}
+                variant={"link"}
+                href={"/signup"}
+                _hover={{
+                  bg: "pink.300",
+                }}
+              >
+                Sign Up
+              </Button>
+            </>
+          )}
         </Stack>
       </Flex>
 
       <Collapse in={isOpen} animateOpacity>
         <MobileNav />
       </Collapse>
+      <div>
+        <Dialog
+          open={open}
+          keepMounted
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-slide-title"
+          aria-describedby="alert-dialog-slide-description"
+        >
+          <DialogTitle id="alert-dialog-slide-title">
+            Enchere Tunise vente Achat en ligne
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-slide-description">
+              <Table variant="simple">
+                <Thead>
+                  <Tr>
+                    <Th>PACK </Th>
+                    <Th>Price</Th>
+                    <Th isNumeric>Amount</Th>
+                    <Th>Total Price by Pack</Th>
+                    <Th> </Th>
+                  </Tr>
+                </Thead>
+                {item.map(({ name, price, amount, id }) => {
+                  return (
+                    <Tbody>
+                      <Tr>
+                        <Td>{name}</Td>
+                        <Td>{price}dt</Td>
+                        <Td>x{amount}</Td>
+                        <Td> {amount * price}</Td>
+                        <Td>
+                          <Flex>
+                            <IconButton
+                              onClick={() => removeItemsHandler(id)}
+                              variant="outline"
+                              colorScheme="red.500"
+                              aria-label="add more"
+                              icon={<MinusIcon />}
+                            />
+                            <IconButton
+                              onClick={() =>
+                                moreItemHandler(id, price, name, 1)
+                              }
+                              variant="outline"
+                              colorScheme="red.500"
+                              aria-label="add more"
+                              icon={<SmallAddIcon />}
+                            />
+                          </Flex>
+                        </Td>
+                      </Tr>
+                    </Tbody>
+                  );
+                })}
+                <Tfoot>
+                  <Tr>
+                    <Th> </Th>
+                    <Th> Price </Th>
+                    <Th> Totale:</Th>
+                    <Th>{totalptice}</Th>
+                  </Tr>
+                </Tfoot>
+              </Table>
+            </DialogContentText>
+            <Heading>total price :{totalptice}</Heading>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary">
+              Cancel
+            </Button>
+
+            {hasItems && (
+              <Button onClick={handleClose} color="primary">
+                Order
+              </Button>
+            )}
+          </DialogActions>
+        </Dialog>
+      </div>
     </Box>
   );
 };
@@ -304,16 +289,15 @@ const DesktopNav = () => {
         <Box key={navItem.label}>
           <Popover trigger={"hover"} placement={"bottom-start"}>
             <PopoverTrigger>
-              <Link
+              <Link             
                 p={2}
-                href={navItem.href ?? "#"}
+                href={navItem.href ?? null}
                 fontSize={"sm"}
                 fontWeight={500}
-                color={"gray.800"}
                 _hover={{
                   textDecoration: "none",
                   color: "gray.800",
-                }}
+                }}  
               >
                 {navItem.label}
               </Link>
@@ -323,7 +307,6 @@ const DesktopNav = () => {
               <PopoverContent
                 border={0}
                 boxShadow={"xl"}
-                bg={"white"}
                 p={4}
                 rounded={"xl"}
                 minW={"sm"}
@@ -343,9 +326,11 @@ const DesktopNav = () => {
 };
 
 const DesktopSubNav = ({ label, href, subLabel }) => {
+  let history=useHistory()
+
   return (
     <Link
-      href={href}
+     onClick={() => history.push(href)}
       role={"group"}
       display={"block"}
       p={2}
@@ -395,13 +380,14 @@ const MobileNav = () => {
 
 const MobileNavItem = ({ label, children, href }) => {
   const { isOpen, onToggle } = useDisclosure();
+  let history=useHistory()
 
   return (
     <Stack spacing={4} onClick={children && onToggle}>
       <Flex
         py={2}
-        as={Link}
-        href={href ?? "#"}
+        as='button'
+        onClick={() => history.push(href)}
         justify={"space-between"}
         align={"center"}
         _hover={{
@@ -449,31 +435,20 @@ const MobileNavItem = ({ label, children, href }) => {
 const NAV_ITEMS = [
   {
     label: "Add Announce",
-    children: [
-      {
-        label: "normal Announce ",
-        subLabel: "text here",
-        href: "/addannonce",
-      },
-      {
-        label: "Enchere",
-        subLabel: "text here",
-        href: "#",
-      },
-      {
-        label: "Draw",
-        subLabel: "text here",
-        href: "#",
-      },
-    ],
+    href: "/addannonce",
+
   },
   {
     label: "About us",
-    href: "#",
+    href: "/",
   },
   {
     label: "Contact us",
-    href: "#",
+    href: "/contactus",
+  },
+  {
+    label: "Buy Points",
+    href: "/carte",
   },
 ];
 
