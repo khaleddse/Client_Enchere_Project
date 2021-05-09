@@ -7,11 +7,17 @@ import AddAnnoucement from "./pages/Annoncement/AddAnnoncment"
 import AnnoncmentPage from "./pages/Annoncement/AnnoncementPage"
 import ListUser from "./pages/PersonnePage/ListUser";
 import ListAdmin from "./pages/PersonnePage/ListAdmin";
+import CardPoint from "./components/UI/CardPoint"
 const Routes = ({isAuth}) => {
   let routes;
 console.log(isAuth)
   routes = (
     <Switch>
+      <Route
+        path="/carte"
+        exact
+        render={(props) => <CardPoint{...props} />}
+      />
      <Route
         path="/adminList"
         exact
