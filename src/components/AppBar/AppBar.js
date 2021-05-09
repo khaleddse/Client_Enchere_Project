@@ -157,7 +157,7 @@ const Navbar = ({ item, totalptice, moreItemsHandler, removeItemsHandler }) => {
               </DialogTitle>
               <DialogContent>
                 <DialogContentText id="alert-dialog-slide-description">
-                  <>
+                 
                     <Table variant="simple">
                       <Thead>
                         <Tr>
@@ -170,7 +170,7 @@ const Navbar = ({ item, totalptice, moreItemsHandler, removeItemsHandler }) => {
                       </Thead>
                       {item.map(({ name, price, amount, id }) => {
                         return (
-                          <div>
+                          
                             <Tbody>
                               <Tr>
                                 <Td>{name}</Td>
@@ -199,7 +199,7 @@ const Navbar = ({ item, totalptice, moreItemsHandler, removeItemsHandler }) => {
                                 </Td>
                               </Tr>
                             </Tbody>
-                          </div>
+                          
                         );
                       })}
                       <Tfoot>
@@ -211,7 +211,7 @@ const Navbar = ({ item, totalptice, moreItemsHandler, removeItemsHandler }) => {
                         </Tr>
                       </Tfoot>
                     </Table>
-                  </>
+               
                 </DialogContentText>
                 <Heading>total price :{totalptice}</Heading>
               </DialogContent>
