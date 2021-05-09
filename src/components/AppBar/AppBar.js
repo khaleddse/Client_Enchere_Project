@@ -16,21 +16,71 @@ import {
   useDisclosure,
   Avatar,
   useColorMode,
+  Heading,
+  Tfoot,
+  Tr,
+  Th,
+  Thead,
+  Tbody,
+  Td,
+  Table,
 } from "@chakra-ui/react";
+
 import {
   HamburgerIcon,
   CloseIcon,
   ChevronDownIcon,
   ChevronRightIcon,
+  SmallAddIcon,
+  MinusIcon,
 } from "@chakra-ui/icons";
+import { connect } from "react-redux";
+import Badge from "@material-ui/core/Badge";
+import AddShoppingCartOutlinedIcon from "@material-ui/icons/AddShoppingCartOutlined";
 import decode from "jwt-decode";
 import { apiBaseUrl } from "../../services/utils";
 import { SunIcon, MoonIcon } from "@chakra-ui/icons";
 import { useHistory } from "react-router";
-export default function Navbar() {
+import React from "react";
+
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+
+import * as CarteAction from "../../store/actions/index";
+
+const Navbar = ({ item, totalptice, moreItemsHandler, removeItemsHandler }) => {
   const { isOpen, onToggle } = useDisclosure();
   const { colorMode, toggleColorMode } = useColorMode();
   let history = useHistory();
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const NumberShop = item.reduce((curNumber, item) => {
+    return Number(curNumber) + Number(item.amount);
+  }, 0);
+
+  const NumberItemShop = +Number(NumberShop);
+  const hasItems = item.length > 0;
+
+  const moreItemHandler = (id, price, qtepoints, value) => {
+    moreItemsHandler({
+      id: id,
+      name: `pack of ${qtepoints} point`,
+      amount: value,
+      price: price,
+    });
+  };
   return (
     <Box>
       <Flex
@@ -47,7 +97,7 @@ export default function Navbar() {
         <Flex
           flex={{ base: 1, md: "auto" }}
           ml={{ base: -2 }}
-          display={{ base: "flex", md: "none" }}
+          display={{ base: "flex", md: "auto" }}
         >
           <IconButton
             onClick={onToggle}
@@ -83,6 +133,101 @@ export default function Navbar() {
             onClick={() => toggleColorMode()}
             variant="ghost"
           />
+
+          <IconButton
+            onClick={handleClickOpen}
+            icon={
+              <Badge badgeContent={NumberItemShop} color="secondary">
+                <AddShoppingCartOutlinedIcon />
+              </Badge>
+            }
+            variant={"ghost"}
+            aria-label={"Toggle Navigation"}
+          />
+          <div>
+            <Dialog
+              open={open}
+              keepMounted
+              onClose={handleClose}
+              aria-labelledby="alert-dialog-slide-title"
+              aria-describedby="alert-dialog-slide-description"
+            >
+              <DialogTitle id="alert-dialog-slide-title">
+                Enchere Tunise vente Achat en ligne
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-slide-description">
+                  <>
+                    <Table variant="simple">
+                      <Thead>
+                        <Tr>
+                          <Th>PACK </Th>
+                          <Th>Price</Th>
+                          <Th isNumeric>Amount</Th>
+                          <Th>Total Price by Pack</Th>
+                          <Th> </Th>
+                        </Tr>
+                      </Thead>
+                      {item.map(({ name, price, amount, id }) => {
+                        return (
+                          <div>
+                            <Tbody>
+                              <Tr>
+                                <Td>{name}</Td>
+                                <Td>{price}dt</Td>
+                                <Td>x{amount}</Td>
+                                <Td> {amount * price}</Td>
+                                <Td>
+                                  <Flex>
+                                    <IconButton
+                                      onClick={() => removeItemsHandler(id)}
+                                      variant="outline"
+                                      colorScheme="red.500"
+                                      aria-label="add more"
+                                      icon={<MinusIcon />}
+                                    />
+                                    <IconButton
+                                      onClick={() =>
+                                        moreItemHandler(id, price, name, 1)
+                                      }
+                                      variant="outline"
+                                      colorScheme="red.500"
+                                      aria-label="add more"
+                                      icon={<SmallAddIcon />}
+                                    />
+                                  </Flex>
+                                </Td>
+                              </Tr>
+                            </Tbody>
+                          </div>
+                        );
+                      })}
+                      <Tfoot>
+                        <Tr>
+                          <Th> </Th>
+                          <Th> Price </Th>
+                          <Th> Totale:</Th>
+                          <Th>{totalptice}</Th>
+                        </Tr>
+                      </Tfoot>
+                    </Table>
+                  </>
+                </DialogContentText>
+                <Heading>total price :{totalptice}</Heading>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleClose} color="primary">
+                  Cancel
+                </Button>
+
+                {hasItems && (
+                  <Button onClick={handleClose} color="primary">
+                    Order
+                  </Button>
+                )}
+              </DialogActions>
+            </Dialog>
+          </div>
 
           <Button
             display={localStorage.getItem("token") ? "none" : "inline-flex"}
@@ -150,7 +295,7 @@ export default function Navbar() {
       </Collapse>
     </Box>
   );
-}
+};
 
 const DesktopNav = () => {
   return (
@@ -331,3 +476,18 @@ const NAV_ITEMS = [
     href: "#",
   },
 ];
+
+const mapStateToProps = (state) => {
+  return {
+    item: state.carte.items,
+    totalptice: state.carte.totalAmount,
+  };
+};
+const mapDispatchToProps = (dispatch) => {
+  return {
+    moreItemsHandler: (item) => dispatch(CarteAction.onAddItems(item)),
+    removeItemsHandler: (id) => dispatch(CarteAction.onRemoveItems(id)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Navbar);
