@@ -13,6 +13,21 @@ const signInSchema = {
     },
   },
 };
+const ContactUsSchema = {
+  email: {
+    presence: { allowEmpty: false},
+    email: { message: "invalid!" },
+    length: {
+      maximum: 64,
+    },
+  },
+  detail: {
+    presence: { allowEmpty: false},
+    length: {
+      maximum: 1000,
+    },
+  },
+};
 const UpdateAccountSchema = {
   firstname: {
     presence: { allowEmpty: false, message: "est obligatoire!" },
@@ -117,4 +132,4 @@ const AddAnnouncementSchema = {
     presence: { allowEmpty: false, message: "est obligatoire!" },
   },*/
 };
-export { signInSchema, signUpSchema, AddAnnouncementSchema,UpdateAccountSchema };
+export { signInSchema, signUpSchema, AddAnnouncementSchema,UpdateAccountSchema ,ContactUsSchema};

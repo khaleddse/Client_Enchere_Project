@@ -8,8 +8,17 @@ import {
   Button,
   FormHelperText,
   FormControl,
+  useDisclosure,
+  Modal,
+  ModalOverlay,
+  Image ,
+  ModalContent,
+  ModalCloseButton,
+  useColorMode,
+  IconButton
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
+import { SunIcon, MoonIcon } from "@chakra-ui/icons";
 import validate from "validate.js";
 import avatar from "../../assets/images/avatar.png";
 import { UpdateAccountSchema } from "../util/schema";
@@ -17,6 +26,8 @@ import { updateUser } from "../../services/userServices";
 import decode from "jwt-decode";
 
 const Setting = () => {
+  const { colorMode, toggleColorMode } = useColorMode();
+  const { isOpen, onOpen, onClose } = useDisclosure()
   const [form, setform] = useState({
     values: {
       firstname: "",
@@ -146,6 +157,8 @@ const Setting = () => {
           m="2rem 3rem"
         >
           <Avatar
+            as="button"
+            onClick={onOpen}
             size="xl"
             name={form.values.firstname + " " + form.values.lastname}
             src={
@@ -171,6 +184,11 @@ const Setting = () => {
               hidden
             />
           </HStack>
+          <IconButton
+            icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
+            onClick={() => toggleColorMode()}
+            variant="ghost"
+          />
         </Stack>
 
         {inputs.map((item) => (
@@ -217,6 +235,23 @@ const Setting = () => {
           </Button>
         </HStack>
       </VStack>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        
+        <ModalContent>
+        <ModalCloseButton />
+          <Image
+          src={
+              form.values.localimage
+                ? form.values.localimage
+                : form.values.image
+                ? "http://localhost:5000/" + form.values.image
+                : avatar
+            }
+            alt=''/>
+            </ModalContent>
+        
+      </Modal>
     </FormControl>
   );
 };
