@@ -52,8 +52,10 @@ const CardPoint = ({ onAddItemsHandler }) => {
     onAddItemsHandler({
       id: id,
       name: `pack of ${qtepoints} point`,
+      packof: qtepoints,
       amount: value,
       price: price,
+      totalpoint: qtepoints * value,
     });
   };
 
@@ -96,7 +98,6 @@ const CardPoint = ({ onAddItemsHandler }) => {
 
                 <NumberInput
                   key={`numberinput${_id}`}
-                  maxW="100px"
                   mr="2rem"
                   min={0}
                   value={value}

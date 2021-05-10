@@ -157,61 +157,58 @@ const Navbar = ({ item, totalptice, moreItemsHandler, removeItemsHandler }) => {
               </DialogTitle>
               <DialogContent>
                 <DialogContentText id="alert-dialog-slide-description">
-                 
-                    <Table variant="simple">
-                      <Thead>
-                        <Tr>
-                          <Th>PACK </Th>
-                          <Th>Price</Th>
-                          <Th isNumeric>Amount</Th>
-                          <Th>Total Price by Pack</Th>
-                          <Th> </Th>
-                        </Tr>
-                      </Thead>
-                      {item.map(({ name, price, amount, id }) => {
-                        return (
-                          
-                            <Tbody>
-                              <Tr>
-                                <Td>{name}</Td>
-                                <Td>{price}dt</Td>
-                                <Td>x{amount}</Td>
-                                <Td> {amount * price}</Td>
-                                <Td>
-                                  <Flex>
-                                    <IconButton
-                                      onClick={() => removeItemsHandler(id)}
-                                      variant="outline"
-                                      colorScheme="red.500"
-                                      aria-label="add more"
-                                      icon={<MinusIcon />}
-                                    />
-                                    <IconButton
-                                      onClick={() =>
-                                        moreItemHandler(id, price, name, 1)
-                                      }
-                                      variant="outline"
-                                      colorScheme="red.500"
-                                      aria-label="add more"
-                                      icon={<SmallAddIcon />}
-                                    />
-                                  </Flex>
-                                </Td>
-                              </Tr>
-                            </Tbody>
-                          
-                        );
-                      })}
-                      <Tfoot>
-                        <Tr>
-                          <Th> </Th>
-                          <Th> Price </Th>
-                          <Th> Totale:</Th>
-                          <Th>{totalptice}</Th>
-                        </Tr>
-                      </Tfoot>
-                    </Table>
-               
+                  <Table variant="simple">
+                    <Thead>
+                      <Tr>
+                        <Th>PACK </Th>
+                        <Th>Price</Th>
+                        <Th isNumeric>Amount</Th>
+                        <Th>Total Price by Pack</Th>
+                        <Th> </Th>
+                      </Tr>
+                    </Thead>
+                    {item.map(({ name, price, amount, id }) => {
+                      return (
+                        <Tbody>
+                          <Tr>
+                            <Td>{name}</Td>
+                            <Td>{price}dt</Td>
+                            <Td>x{amount}</Td>
+                            <Td> {amount * price}</Td>
+                            <Td>
+                              <Flex>
+                                <IconButton
+                                  isDisabled={amount === 0 ? true : false}
+                                  onClick={() => removeItemsHandler(id)}
+                                  variant="outline"
+                                  colorScheme="red.500"
+                                  aria-label="add more"
+                                  icon={<MinusIcon />}
+                                />
+                                <IconButton
+                                  onClick={() =>
+                                    moreItemHandler(id, price, name, 1)
+                                  }
+                                  variant="outline"
+                                  colorScheme="red.500"
+                                  aria-label="add more"
+                                  icon={<SmallAddIcon />}
+                                />
+                              </Flex>
+                            </Td>
+                          </Tr>
+                        </Tbody>
+                      );
+                    })}
+                    <Tfoot>
+                      <Tr>
+                        <Th> </Th>
+                        <Th> Price </Th>
+                        <Th> Totale:</Th>
+                        <Th>{totalptice}</Th>
+                      </Tr>
+                    </Tfoot>
+                  </Table>
                 </DialogContentText>
                 <Heading>total price :{totalptice}</Heading>
               </DialogContent>
@@ -221,7 +218,7 @@ const Navbar = ({ item, totalptice, moreItemsHandler, removeItemsHandler }) => {
                 </Button>
 
                 {hasItems && (
-                  <Button onClick={handleClose} color="primary">
+                  <Button onClick={() => history.push("/pay")} color="primary">
                     Order
                   </Button>
                 )}

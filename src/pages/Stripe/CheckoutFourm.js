@@ -1,11 +1,21 @@
 import React from "react";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import axios from "axios";
+import { connect } from "react-redux";
+import decode from "jwt-decode";
+import { withRouter } from "react-router-dom";
 
-export const CheckoutForm = () => {
+const CheckoutForm = ({ item, price, history }) => {
   const stripe = useStripe();
   const elements = useElements();
 
+  const { userId } = decode(localStorage.getItem("token"));
+  const totalpts = item.reduce((curNumber, item) => {
+    return Number(curNumber) + Number(item.totalpoint);
+  }, 0);
+  console.log(userId + "   " + totalpts, price);
+
+  console.log(totalpts);
   const handleSubmit = async (event) => {
     event.preventDefault();
     const { error, paymentMethod } = await stripe.createPaymentMethod({
@@ -20,14 +30,19 @@ export const CheckoutForm = () => {
         const response = await axios.post(
           "http://localhost:5000/stripe/charge",
           {
-            amount: 100,
+            amount: price * 100,
             id: id,
+            userId: userId,
+            point: totalpts,
           }
         );
 
         console.log("Stripe 35 | data", response.data.success);
         if (response.data.success) {
+          localStorage.removeItem("token");
+          localStorage.setItem("token", response.data.token);
           console.log("CheckoutForm.js 25 | payment successful!");
+          history.push("/Aucciel");
         }
       } catch (error) {
         console.log("CheckoutForm.js 28 | ", error);
@@ -44,3 +59,11 @@ export const CheckoutForm = () => {
     </form>
   );
 };
+const mapStateToProps = (state) => {
+  return {
+    item: state.carte.items,
+    price: state.carte.totalAmount,
+  };
+};
+
+export default connect(mapStateToProps)(withRouter(CheckoutForm));
