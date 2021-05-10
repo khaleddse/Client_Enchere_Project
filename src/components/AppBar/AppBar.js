@@ -126,6 +126,151 @@ const Navbar = ({ item, totalptice, moreItemsHandler, removeItemsHandler }) => {
           direction={"row"}
           spacing={5}
         >
+
+          <IconButton
+            icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
+            onClick={() => toggleColorMode()}
+            variant="ghost"
+          />
+
+          <IconButton
+            onClick={handleClickOpen}
+            icon={
+              <Badge badgeContent={NumberItemShop} color="secondary">
+                <AddShoppingCartOutlinedIcon />
+              </Badge>
+            }
+            variant={"ghost"}
+            aria-label={"Toggle Navigation"}
+          />
+          <div>
+            <Dialog
+              open={open}
+              keepMounted
+              onClose={handleClose}
+              aria-labelledby="alert-dialog-slide-title"
+              aria-describedby="alert-dialog-slide-description"
+            >
+              <DialogTitle id="alert-dialog-slide-title">
+                Enchere Tunise vente Achat en ligne
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-slide-description">
+                  <Table variant="simple">
+                    <Thead>
+                      <Tr>
+                        <Th>PACK </Th>
+                        <Th>Price</Th>
+                        <Th isNumeric>Amount</Th>
+                        <Th>Total Price by Pack</Th>
+                        <Th> </Th>
+                      </Tr>
+                    </Thead>
+                    {item.map(({ name, price, amount, id }) => {
+                      return (
+                        <Tbody>
+                          <Tr>
+                            <Td>{name}</Td>
+                            <Td>{price}dt</Td>
+                            <Td>x{amount}</Td>
+                            <Td> {amount * price}</Td>
+                            <Td>
+                              <Flex>
+                                <IconButton
+                                  isDisabled={amount === 0 ? true : false}
+                                  onClick={() => removeItemsHandler(id)}
+                                  variant="outline"
+                                  colorScheme="red.500"
+                                  aria-label="add more"
+                                  icon={<MinusIcon />}
+                                />
+                                <IconButton
+                                  onClick={() =>
+                                    moreItemHandler(id, price, name, 1)
+                                  }
+                                  variant="outline"
+                                  colorScheme="red.500"
+                                  aria-label="add more"
+                                  icon={<SmallAddIcon />}
+                                />
+                              </Flex>
+                            </Td>
+                          </Tr>
+                        </Tbody>
+                      );
+                    })}
+                    <Tfoot>
+                      <Tr>
+                        <Th> </Th>
+                        <Th> Price </Th>
+                        <Th> Totale:</Th>
+                        <Th>{totalptice}</Th>
+                      </Tr>
+                    </Tfoot>
+                  </Table>
+                </DialogContentText>
+                <Heading>total price :{totalptice}</Heading>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleClose} color="primary">
+                  Cancel
+                </Button>
+
+                {hasItems && (
+                  <Button onClick={() => history.push("/pay")} color="primary">
+                    Order
+                  </Button>
+                )}
+              </DialogActions>
+            </Dialog>
+          </div>
+
+          <Button
+            display={localStorage.getItem("token") ? "none" : "inline-flex"}
+            as={"a"}
+            fontSize={"sm"}
+            fontWeight={400}
+            variant={"link"}
+            href={"/signin"}
+          >
+            Sign In
+          </Button>
+
+          <Button
+            display={
+              localStorage.getItem("token")
+                ? "none"
+                : { base: "none", md: "inline-flex" }
+            }
+            w="100%"
+            fontSize={"sm"}
+            fontWeight={600}
+            color={"white"}
+            bg={"pink.400"}
+            variant={"link"}
+            href={"/signup"}
+            _hover={{
+              bg: "pink.300",
+            }}
+          >
+            Sign Up
+          </Button>
+          {/* <Link
+              display={localStorage.getItem('token')? 'inline-flex' :'none'}
+              //href={'/account'}
+              onClick={()=>history.push('/account')}
+           >*/}
+          <Button onClick={() => history.push("/account")}>
+            <Avatar
+              size="sm"
+              name=""
+              src={
+                localStorage.getItem("token") &&
+                apiBaseUrl + decode(localStorage.getItem("token")).image
+              }
+            />
+          </Button>
+
           {localStorage.getItem("token") ? (
             <>
               <IconButton
@@ -174,6 +319,7 @@ const Navbar = ({ item, totalptice, moreItemsHandler, removeItemsHandler }) => {
               >
                 Sign In
               </Button>
+
 
               <Button
                 display={{ base: "none", md: "inline-flex" }}

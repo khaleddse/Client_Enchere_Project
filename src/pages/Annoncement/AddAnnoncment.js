@@ -10,6 +10,7 @@ import decode from "jwt-decode";
 import validate from "validate.js";
 import { regions } from "./data";
 import { connect } from "react-redux";
+import * as annonceAction from "../../store/actions/index";
 
 import {
   NumberInput,
@@ -44,10 +45,9 @@ import { useHistory } from "react-router";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-const AddAnnoucement = ({ Listcategories }) => {
-
+const AddAnnoucement = ({ Listcategories, ongetAllCategories }) => {
   const [startDate, setStartDate] = useState(new Date());
-  console.log(startDate)
+  console.log(startDate);
   const [isLoading, setisLoading] = useState(false);
   const [value, setValue] = useState("Normal");
   const [maxparticipants, setMaxparticiPants] = useState("");
@@ -75,6 +75,10 @@ const AddAnnoucement = ({ Listcategories }) => {
     errors: {},
     touched: {},
   });
+
+  useEffect(() => {
+    ongetAllCategories();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const errors = validate(formState.values, AddAnnouncementSchema);
@@ -340,15 +344,16 @@ const AddAnnoucement = ({ Listcategories }) => {
                       <FormLabel color={`teal.500`}>
                         Enter date_fin Enchére
                       </FormLabel>
-                     <DatePicker selected={startDate} 
-                     onChange={date => setStartDate(date)}
-                     dateFormat='dd/MM/yyyy'
-                     minDate={new Date()}
-                     isClearable
-                   />
+                      <DatePicker
+                        selected={startDate}
+                        onChange={(date) => setStartDate(date)}
+                        dateFormat="dd/MM/yyyy"
+                        minDate={new Date()}
+                        isClearable
+                      />
                     </VStack>
                   </FormControl>
-                   
+
                   <VStack width="100%" textAlign="left">
                     <FormLabel color={`teal.500`}>
                       <Text color="teal.500">initial_price</Text>
@@ -526,4 +531,10 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(AddAnnoucement);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    ongetAllCategories: () => dispatch(annonceAction.getAllCategorie()),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddAnnoucement);
