@@ -23,7 +23,7 @@ import {
 import { DeleteAvis,repondreAvis } from "../../services/avisService";
 
 import { ViewIcon,DeleteIcon } from '@chakra-ui/icons'
-import { GetAllAvis } from "../../services/avisService";
+//import { GetAllAvis } from "../../services/avisService";
 const AvisCard = ({ avis }) => {
 const [isSucceed, setIsSucceed] = useState(false);
 const { isOpen, onOpen, onClose } = useDisclosure();
