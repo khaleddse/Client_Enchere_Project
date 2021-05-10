@@ -15,12 +15,23 @@ const initialState = {
 const login = (state, action) => {
   const token = action.login_data.token;
   localStorage.setItem("token", token);
+ const  grade=decode(token).grade
+if(grade==='user'){
   return updateObject(state, {
     token: token,
     user: decode(token),
     isauth: true,
     IslodingConnection: false,
   });
+}else{
+  return updateObject(state, {
+    token: token,
+    admin: decode(token),
+    isauthEmpl: true,
+    IslodingConnection: false,
+  });
+}
+ 
 };
 const Failed_Auth = (state, action) => {
   localStorage.removeItem("token");
