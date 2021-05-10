@@ -46,7 +46,6 @@ import React from "react";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
 import * as CarteAction from "../../store/actions/index";
@@ -215,7 +214,7 @@ const redirecttoPay=()=>{
             Enchere Tunise vente Achat en ligne
           </DialogTitle>
           <DialogContent>
-            <DialogContentText id="alert-dialog-slide-description">
+           
               <Table variant="simple">
                 <Thead>
                   <Tr>
@@ -267,7 +266,7 @@ const redirecttoPay=()=>{
                   </Tr>
                 </Tfoot>
               </Table>
-            </DialogContentText>
+            
             <Heading>total price :{totalptice}</Heading>
           </DialogContent>
           <DialogActions>

@@ -63,13 +63,23 @@ const removeitems = (state, action) => {
   };
 };
 
+
+const Clearitems=(state,action) =>{
+  return {
+    items: [],
+    totalAmount: 0,
+    totalPoint:0
+  };
+}
+
 const CarteReducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.ADD_ITEMS_TOCART:
       return AddItems(state, action);
     case actionTypes.Remove_ITEM_FROMCART:
       return removeitems(state, action);
-
+    case actionTypes.CLEAR_ITEAM:
+      return Clearitems(state,action);
     default:
       return state;
   }

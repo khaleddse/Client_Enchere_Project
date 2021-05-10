@@ -13,6 +13,11 @@ const removeItems = (id) => {
     id: id,
   };
 };
+const ClearItems=()=>{
+  return {
+    type:actionTypes.CLEAR_ITEAM
+  }
+}
 
 export const onAddItems = (item) => {
   return (dispatch) => {
@@ -25,3 +30,9 @@ export const onRemoveItems = (id) => {
     return dispatch(removeItems(id));
   };
 };
+
+export const onClearIteam=()=>{
+  return (dispatch)=>{
+    return dispatch(ClearItems())
+  }
+}
