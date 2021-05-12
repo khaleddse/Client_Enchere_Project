@@ -10,6 +10,18 @@ export const onAddNormalAnnonce = (userid, subcateg_id, cityId, authData) => {
       console.error(err.message);
     });
 };
+export const onEnchereParticipation = (id, data) => {
+  return axios
+    .post(`/enchere/participate/${id}`, data)
+    .then((resData) => {
+      localStorage.removeItem("token");
+      localStorage.setItem("token", resData.data.token);
+      return resData.data.enchere;
+    })
+    .catch((err) => {
+      console.error(err.message);
+    });
+};
 
 export const onAddDrawAnnonce = (usrid, subcateg_id, cityId, authData) => {
   return axios
