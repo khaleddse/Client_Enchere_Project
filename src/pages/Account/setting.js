@@ -123,6 +123,12 @@ const Setting = () => {
       type: "number",
       name: "phone",
     },
+    {
+      label: "Points",
+      value: form.values.point,
+      type: "number",
+      name: "point",
+    },
   ];
 
   //hide <input> and ref value to button
@@ -208,7 +214,7 @@ const Setting = () => {
                 name={item.name}
                 variant="outline"
                 value={form.values[item.name]}
-                disabled={item.label === "E-mail" ? true : false}
+                disabled={(item.label === "E-mail" || item.label === "Points" ) ? true : false}
               />
               {hasError(item.name) && (
                 <FormHelperText color="red">
