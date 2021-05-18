@@ -18,7 +18,7 @@ import {
   PopoverHeader,
   PopoverCloseButton,
   PopoverBody,
-  PopoverFooter
+  PopoverFooter,
 } from "@chakra-ui/react";
 import openSocket from "socket.io-client";
 import decode from "jwt-decode";
@@ -26,52 +26,54 @@ import { Icon } from "@chakra-ui/react";
 import NotFound from "../assets/images/NotFound.jpg";
 import { FcLikePlaceholder, FcLike } from "react-icons/fc";
 import { apiBaseUrl } from "../services/utils";
-import { useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import { useHistory } from "react-router";
-import {onEnchereParticipation} from "../services/AnnonceService"
+import { onEnchereParticipation } from "../services/AnnonceService";
 const Card = ({ item }) => {
-  let history=useHistory()
-  const [anounce, setanounce] = useState(item)
-  const [participation_price, setparticipation_price] = useState('')
+  let history = useHistory();
+  const [anounce, setanounce] = useState(item);
+  const [participation_price, setparticipation_price] = useState("");
   const { isOpen, onToggle } = useDisclosure();
   const [likes, setLikes] = useState(0);
 
   useEffect(() => {
-    setanounce(anounce)
+    setanounce(anounce);
     anounce.likes && setLikes(anounce.likes.length);
-    
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
-  const handleInputChange=(e)=>{
-    setparticipation_price(e.target.value)
-  } 
+  const handleInputChange = (e) => {
+    setparticipation_price(e.target.value);
+  };
   const socket = openSocket("http://localhost:5000");
-  socket.on("posts/"+anounce._id, (data) => {
-
+  socket.on("posts/" + anounce._id, (data) => {
     if (data.action === "update") {
-      setanounce(data.enchere)
-    } 
-    
+      setanounce(data.enchere);
+    }
   });
-  const onSubmitPriceHandler=async()=>{
-    const {userId,point} = decode(localStorage.getItem("token"))
-    const user=userId
-    const lastprice= anounce?.enchere_list[anounce.enchere_list.length - 1]?.price || anounce.initial_price
-    if(localStorage.getItem('token')){
-      if(point>10){
-      const price=participation_price
-      if(price>lastprice){
-        const result= await onEnchereParticipation(anounce._id,{user,price})
-        console.log(result)
-        setparticipation_price('')
-        setanounce(result)
+  const onSubmitPriceHandler = async () => {
+    const { userId, point } = decode(localStorage.getItem("token"));
+    const user = userId;
+    const lastprice =
+      anounce?.enchere_list[anounce.enchere_list.length - 1]?.price ||
+      anounce.initial_price;
+    if (localStorage.getItem("token")) {
+      if (point > 10) {
+        const price = participation_price;
+        if (price > lastprice) {
+          const result = await onEnchereParticipation(anounce._id, {
+            user,
+            price,
+          });
+          console.log(result);
+          setparticipation_price("");
+          setanounce(result);
+        }
+      } else {
+        history.push("/carte");
       }
-    }else{
-      history.push("/carte")
+    } else {
+      history.push("/signin");
     }
-    }else{
-      history.push('/signin')
-    }
-  }
+  };
   const handlechange = () => {
     if (isOpen) setLikes((prevstate) => prevstate - 1);
     else setLikes((prevstate) => prevstate + 1);
@@ -92,7 +94,7 @@ const Card = ({ item }) => {
         <Avatar
           size="sm"
           name=""
-          src={anounce.user && (apiBaseUrl + "" + anounce.user.image)}
+          src={anounce.user && apiBaseUrl + "" + anounce.user.image}
         />
         <VStack py="1" spacing="0">
           <Button
@@ -102,7 +104,8 @@ const Card = ({ item }) => {
             alignSelf="flex-start"
             fontSize="xs"
           >
-            {anounce.user && anounce.user.firstname + " " + anounce.user.lastname}
+            {anounce.user &&
+              anounce.user.firstname + " " + anounce.user.lastname}
           </Button>
           <Box
             color="gray.500"
@@ -122,12 +125,15 @@ const Card = ({ item }) => {
         minHeight="200px"
         bg="gray.500"
         width="100%"
-        src={anounce.image ? "http://localhost:5000/" + anounce.image : NotFound}
+        src={
+          anounce.image ? "http://localhost:5000/" + anounce.image : NotFound
+        }
         alt={anounce.subject}
       />
 
       <Badge borderRadius="full" px="2" colorScheme="teal" ml="4" mt="-7">
-        {new Date(anounce.createdAt).getDate() > new Date().getDate() - 1 && "New"}
+        {new Date(anounce.createdAt).getDate() > new Date().getDate() - 1 &&
+          "New"}
       </Badge>
       <Box px="6" pb="2">
         <HStack mt="1">
@@ -151,41 +157,74 @@ const Card = ({ item }) => {
         <Text color="gray.600" fontSize="xs" isTruncated>
           {anounce.details}...
         </Text>
-        <HStack mb="1">
-        <Box >
-          {anounce.price
-            ? "Price : " + anounce.price
-            : anounce.initial_price
-            ? "Actual price : " + (anounce?.enchere_list[anounce.enchere_list.length - 1]?.price || anounce.initial_price)
-            : "Participation : " + anounce.participation_price}
-          </Box>
+        <HStack mb="1" >
+          <HStack width="180px">
+            <Text  isTruncated>
+              {anounce.price
+                ? "Price : " + anounce.price
+                : anounce.initial_price
+                ? "Actual price : " +
+                  (anounce?.enchere_list[anounce.enchere_list.length - 1]
+                    ?.price || anounce.initial_price)
+                : "Participation : " + anounce.participation_price}
+            </Text>
+        <Text color="gray.600" fontSize="xs" >
+          /Tnd
+        </Text>
+          </HStack>
           {anounce.__t === "Enchere" && (
-          <Popover>
-          <PopoverTrigger>
-            <Button size="xs">Participate</Button>
-          </PopoverTrigger>
-          <Portal>
-            <PopoverContent>
-              <PopoverArrow />
-              <PopoverHeader>Participate :</PopoverHeader>
-              <PopoverCloseButton />
-              <PopoverBody>
-                {"Initial Price: "+anounce.initial_price}<br/>
-                {"Actual Price: "+(anounce?.enchere_list[anounce.enchere_list.length - 1]?.price || anounce.initial_price)}
-                
-              </PopoverBody>
-              <PopoverFooter>
-              <HStack>
-                <Input type="number" value={participation_price} onChange={handleInputChange} placeholder="Your price"/>
-                <Button colorScheme="blue" onClick={onSubmitPriceHandler}>Submit</Button>
-                </HStack>   
-              </PopoverFooter>
-            </PopoverContent>
-          </Portal>
-        </Popover>
-        )}
+            <Popover align="end">
+              {anounce.isVlable ? (
+                <PopoverTrigger>
+                  <Button size="xs">Participate</Button>
+                </PopoverTrigger>
+              ) : (
+                <Badge as="h4" variant="outline" colorScheme={"red"}>
+                  Sold
+                </Badge>
+              )}
+
+              <Portal>
+                <PopoverContent>
+                  <PopoverArrow />
+                  <PopoverHeader>Participate :</PopoverHeader>
+                  <PopoverCloseButton />
+                  <PopoverBody> 
+                  {"Expiry date: " + new Date(anounce.end_Date).toLocaleDateString()+" "+ new Date(anounce.end_Date).toLocaleTimeString()}
+                  <br/>
+                    {"Initial Price: " + anounce.initial_price}
+                    <br />
+                    {"Actual Price: " +
+                      (anounce?.enchere_list[anounce.enchere_list.length - 1]
+                        ?.price || anounce.initial_price)} 
+                  </PopoverBody>
+                  <PopoverFooter>
+                    {localStorage.getItem("token") && (decode(localStorage.getItem("token")).userId ===
+                    anounce.user._id )? (
+                      "You can't participate ,it's Yours !"
+                    ) : (
+                      <HStack>
+                        <Input
+                          type="number"
+                          value={participation_price}
+                          onChange={handleInputChange}
+                          placeholder="Your price"
+                        />
+                        <Button
+                          colorScheme="blue"
+                          onClick={onSubmitPriceHandler}
+                        >
+                          Submit
+                        </Button>
+                      </HStack>
+                    )}
+                  </PopoverFooter>
+                </PopoverContent>
+              </Portal>
+            </Popover>
+          )}
         </HStack>
-        
+
         <hr />
         <Box d="flex" mt="1" alignItems="center">
           <Box
@@ -196,7 +235,7 @@ const Card = ({ item }) => {
             color="gray.600"
             fontSize="md"
           >
-           {likes}
+            {likes}
             <IconButton
               onClick={() => handlechange()}
               icon={
