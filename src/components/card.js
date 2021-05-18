@@ -20,6 +20,7 @@ import {
   PopoverBody,
   PopoverFooter
 } from "@chakra-ui/react";
+import openSocket from "socket.io-client";
 import decode from "jwt-decode";
 import { Icon } from "@chakra-ui/react";
 import NotFound from "../assets/images/NotFound.jpg";
@@ -34,6 +35,7 @@ const Card = ({ item }) => {
   const [participation_price, setparticipation_price] = useState('')
   const { isOpen, onToggle } = useDisclosure();
   const [likes, setLikes] = useState(0);
+
   useEffect(() => {
     setanounce(anounce)
     anounce.likes && setLikes(anounce.likes.length);
@@ -42,6 +44,14 @@ const Card = ({ item }) => {
   const handleInputChange=(e)=>{
     setparticipation_price(e.target.value)
   } 
+  const socket = openSocket("http://localhost:5000");
+  socket.on("posts/"+anounce._id, (data) => {
+
+    if (data.action === "update") {
+      setanounce(data.enchere)
+    } 
+    
+  });
   const onSubmitPriceHandler=async()=>{
     const {userId,point} = decode(localStorage.getItem("token"))
     const user=userId

@@ -50,7 +50,10 @@ const AnnoncmentPage = ({
         ongetAnnoncmentHandler();
       } else if (data.action === "delete") {
         ongetAnnoncmentHandler();
+      }else if (data.action==='isUpdated'){
+        ongetAnnoncmentHandler();
       }
+      
     });
   }, [page]); // eslint-disable-line react-hooks/exhaustive-deps
 
