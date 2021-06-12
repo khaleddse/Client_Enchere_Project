@@ -132,7 +132,7 @@ const Card = ({ item }) => {
       />
 
       <Badge borderRadius="full" px="2" colorScheme="teal" ml="4" mt="-7">
-        {new Date(anounce.createdAt).getDate() > new Date().getDate() - 1 &&
+        {(new Date(anounce.createdAt) > new Date() - 1) &&
           "New"}
       </Badge>
       <Box px="6" pb="2">

@@ -6,7 +6,7 @@ import Pagination from "@material-ui/lab/Pagination";
 import { connect } from "react-redux";
 import * as annonceAction from "../../store/actions/index";
 import { Spinner, Stack } from "@chakra-ui/react";
-import { Button } from "@chakra-ui/react";
+import { Button,Center } from "@chakra-ui/react";
 import { useHistory } from "react-router";
 import openSocket from "socket.io-client";
 
@@ -73,17 +73,18 @@ const AnnoncmentPage = ({
           />
         </Stack>
       ) : (
-        <SimpleGrid minChildWidth="300px" spacing="10px">
+        <SimpleGrid minChildWidth="300px" spacing="10px" px={{base:"1rem",md:"12rem"}} pt="3rem">
           {annonce &&
             annonce.map((item) => <Card item={item} key={item._id} />)}
         </SimpleGrid>
       )}
+      <Center>
       <Pagination
         count={pagesNumber}
         page={page}
         onChange={(_, value) => setPage(value)}
       />
-      <Button onClick={() => history.push("/addannonce")}></Button>
+      </Center>
     </div>
   );
 };
