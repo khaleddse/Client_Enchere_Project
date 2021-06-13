@@ -40,3 +40,15 @@ return data
     console.error(err.message)
   })
   }
+  
+  export const getUser=(id)=>{
+    
+    return axios
+    .get(`/user/${id}`)
+    .then(({data})=>{
+      return data
+    })
+    .catch((err)=>{
+      console.error(err.message)
+    })
+    }
