@@ -20,6 +20,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { regions } from "../../pages/Annoncement/data";
+import { FiMenu } from 'react-icons/fi';
 
 function Menu(props) {
   /*useEffect(()=>{
@@ -36,7 +37,7 @@ function Menu(props) {
   return (
     <>
       <Button ref={btnRef} colorScheme="teal" onClick={onOpen}>
-        Open
+        <FiMenu/> 
       </Button>
       <Drawer
         isOpen={isOpen}
@@ -47,7 +48,7 @@ function Menu(props) {
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader>Filter By Categorie , country , subject </DrawerHeader>
+          <DrawerHeader mt="2rem">Filter By Categorie , country , subject </DrawerHeader>
 
           <DrawerBody>
             <DrawerBody>
@@ -64,7 +65,7 @@ function Menu(props) {
                         props.selectedCateg(null, "all")
                       }
                     >
-          <ListItem> Tous les categories</ListItem>
+          <ListItem color='teal'> Tous les categories</ListItem>
           </UnorderedList>
        
               {props.ListCategories.map((categ, index) => {
@@ -78,7 +79,7 @@ function Menu(props) {
                       }
                     >
                       <UnorderedList>
-                        <ListItem>{subcateg.nom}</ListItem>
+                        <ListItem><a> - {subcateg.nom}</a></ListItem>
                       </UnorderedList>
                     </UnorderedList>
                   );
@@ -104,7 +105,7 @@ function Menu(props) {
                         props.selectedCateg(null, "all")
                       }
                     >
-          <ListItem> All the Country</ListItem>
+          <ListItem color='teal'> All the Country</ListItem>
           </UnorderedList>
        
               {regions[0].map((region) => {

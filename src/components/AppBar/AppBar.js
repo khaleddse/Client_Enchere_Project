@@ -457,11 +457,22 @@ const NAV_ITEMS = [
     label: "Buy Points",
     href: "/carte",
   },
-  {
-    label:"Serach",
-    href:<Menu/>
-  }
 ];
+const grade=localStorage.getItem('token') ? decode(localStorage.getItem('token')).grade :""
+if(grade ==='admin'){
+  NAV_ITEMS.push({
+    label: "List users",
+    href: "/userList",
+  })
+  NAV_ITEMS.push({
+    label: "List admins",
+    href: "/adminList",
+  })
+  NAV_ITEMS.push({
+    label: "List avis",
+    href: "/avis",
+  })
+}
 
 const mapStateToProps = (state) => {
   return {
