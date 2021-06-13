@@ -47,7 +47,7 @@ const AnnoncmentPage = ({
   useEffect(() => {
     ongetAnnoncmentHandler(page);
 
-    ongetUserAnnoncmentHandler(usr.userId);
+    //ongetUserAnnoncmentHandler(usr.userId);
 
     ongetAllCategories();
 
