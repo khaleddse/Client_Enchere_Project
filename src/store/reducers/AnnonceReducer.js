@@ -9,7 +9,7 @@ const initialState = {
     userAnnounces:[],
     isLoding:false,
     listcategorie:[],
-  
+  filter:"",
   };
 
   const UserAnnouncment=(state,action)=>{
@@ -42,11 +42,25 @@ const getAllCategorie=(state,action)=>{
   })
 };
 
+const filtercateg=(state,action)=>{
+  const result = state.annonces.filter((annonc) => {
+    if (annonc.subcategorie === action.id) {
+      console.log(annonc)
+      return annonc;
+    }
+  });
+console.log(result)
+  return updateObject(state,{
+   annonces:result,
+   filter:action.id
+  })
+}
 
 
 const AnnonceReducer = (state = initialState, action) => {
     
   switch (action.type) {
+    case actionTypes.FILTRED: return filtercateg(state, action);
       case actionTypes.ANNONCEMENT: return Annoncment(state, action);
       case actionTypes.FETCH_DATA_FAILED: return fetchDataFailed(state, action);
       case actionTypes.USER_ANNONCES:return UserAnnouncment(state,action);

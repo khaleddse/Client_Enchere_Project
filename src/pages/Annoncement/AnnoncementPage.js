@@ -9,6 +9,7 @@ import { Spinner, Stack } from "@chakra-ui/react";
 import { Button,Center } from "@chakra-ui/react";
 import { useHistory } from "react-router";
 import openSocket from "socket.io-client";
+import Navbar from "../../components/AppBar/AppBar";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,10 +29,12 @@ const AnnoncmentPage = ({
   usr,
   isloding,
   ongetAllCategories,
+  onFiltredAnnoncment,
 }) => {
   const classes = useStyles();
   const [page, setPage] = useState(1);
-
+  const [isfiltred, setIsFiltred] = useState(false);
+  const [text, setText] = useState({ search: "" });
   let history = useHistory();
 
   useEffect(() => {
@@ -58,9 +61,31 @@ const AnnoncmentPage = ({
   }, [page]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const pagesNumber = counts;
+  const selectedCateg = async (id, type) => {
 
+    if (type === "subcateg") {
+      onFiltredAnnoncment(id)
+     
+    } else if (type === "all") {
+     // setAnnouncements(announcementscontexte);
+    }
+
+  };
+  const FilterChangeHandler = async (value) => {
+    if (value.trim().length > 0) 
+    setIsFiltred(true);
+    else 
+    setIsFiltred(false);
+
+    setText({ search: value });
+  };
+  const regex = new RegExp(text.search, "i");
   return (
     <div className={classes.root}>
+      <Navbar
+       selectedCateg={selectedCateg}
+       filterHandler={FilterChangeHandler}
+      />
       {isloding ? (
         <Stack direction="row" spacing={4}>
           <Spinner
@@ -74,7 +99,20 @@ const AnnoncmentPage = ({
         </Stack>
       ) : (
         <SimpleGrid minChildWidth="300px" spacing="10px" px={{base:"1rem",md:"12rem"}} pt="3rem">
-          {annonce &&
+          {
+          isfiltred ? (
+            annonce
+              .filter((annonces) => {
+                if (regex.test(annonces.subject)) {
+                  return annonces;
+                } else {
+                  return null;
+                }
+              })
+              .map((item) => <Card item={item} key={item._id} />))
+              :
+          
+          annonce &&
             annonce.map((item) => <Card item={item} key={item._id} />)}
         </SimpleGrid>
       )}
@@ -98,6 +136,7 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
   return {
+    onFiltredAnnoncment:(id)=>dispatch({type:"FILTRED",id}),
     ongetAnnoncmentHandler: (page) =>
       dispatch(annonceAction.ongetAllAnnonce(page)),
     ongetUserAnnoncmentHandler: (userid) =>

@@ -49,8 +49,9 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
 import * as CarteAction from "../../store/actions/index";
+import Menu from "../UI/Menu";
 
-const Navbar = ({ item, totalptice, moreItemsHandler, removeItemsHandler }) => {
+const Navbar = ({ item, totalptice, moreItemsHandler, removeItemsHandler, selectedCateg,filterHandler }) => {
   const { isOpen, onToggle } = useDisclosure();
   let history = useHistory();
   const [open, setOpen] = React.useState(false);
@@ -179,6 +180,7 @@ const redirecttoPay=()=>{
                 Sign In
               </Button>
 
+
               <Button
                 display={{ base: "none", md: "inline-flex" }}
                 w="100%"
@@ -196,6 +198,9 @@ const redirecttoPay=()=>{
               </Button>
             </>
           )}
+         <Menu  selectedCateg={selectedCateg}
+         filterHandler={filterHandler}
+         />
         </Stack>
       </Flex>
 
@@ -454,6 +459,10 @@ const NAV_ITEMS = [
     label: "Buy Points",
     href: "/carte",
   },
+  {
+    label:"Serach",
+    href:<Menu/>
+  }
 ];
 
 const mapStateToProps = (state) => {
