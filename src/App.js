@@ -3,8 +3,20 @@ import Footer from "./components/Footer/Footer";
 import { ChakraProvider } from "@chakra-ui/react";
 import Navbar from "./components/AppBar/AppBar";
 import { connect } from "react-redux";
-function App({auth,isauthempl}) {
+import { useEffect } from "react";
+import * as action from "./store/actions/index";
+import { useHistory } from "react-router";
+function App({auth,isauthempl,authCheckHandler}) {
+  let history=useHistory();
+ useEffect(()=>{
+  authCheckHandler()
  
+ },[])
+ useEffect(()=>{
+  if(!auth){
+    history.push('/signin')
+  }
+ },[auth])
   return (
     <ChakraProvider>
     <Navbar/>
@@ -19,4 +31,10 @@ const mapStateToProps=(state)=>{
     isauthempl:state.users.isauthempl
   }
 }
-export default connect(mapStateToProps)(App);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    authCheckHandler:()=>dispatch(action.AuthCheck()),
+   
+  };
+};
+export default connect(mapStateToProps,mapDispatchToProps)(App);

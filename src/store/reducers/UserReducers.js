@@ -13,8 +13,8 @@ const initialState = {
 };
 
 const login = (state, action) => {
-  const token = action.login_data.token;
-  localStorage.setItem("token", token);
+  const token = action.token;
+ 
  const  grade=decode(token).grade
 if(grade==='user'){
   return updateObject(state, {
@@ -44,20 +44,32 @@ const Failed_Auth = (state, action) => {
   });
 };
 
-const IsLodings = (state, action) => {
+/*const IsLodings = (state, action) => {
   return updateObject(state, {
     IslodingConnection: true,
   });
-};
-
+};*/
+const AuthLogout=(state)=>{
+  
+return updateObject(state,{
+  isauth: false,
+  isauthEmpl: false,
+  token: null,
+  user:null,
+  IslodingConnection: false,
+}
+  )
+}
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.SET_DATA:
       return login(state, action);
     case actionTypes.AUTH_FAILED:
       return Failed_Auth(state, action);
-    case actionTypes.ISLOADING:
-      return IsLodings(state, action);
+   /* case actionTypes.ISLOADING:
+      return IsLodings(state, action);*/
+    case actionTypes.AUTH_LOGOUT:
+      return AuthLogout(state,action)
     //case actionTypes.SIGNUP: return onSignup(state , action);
     //case actionTypes.FETCH_INGREDIENTS_FAILED: return fetchIngredientsFailed(state, action);
     default:
