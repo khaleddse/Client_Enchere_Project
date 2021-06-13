@@ -9,6 +9,8 @@ import ListUser from "./pages/PersonnePage/ListUser";
 import ListAdmin from "./pages/PersonnePage/ListAdmin";
 import CardPoint from "./components/UI/CardPoint"
 import ContactUs from "./pages/avis/ContacUs"
+import Announce from "./pages/Announce/announce"
+
 import ListAvis from "./pages/avis/ListAvis"
 
 const Routes = ({isAuth}) => {
@@ -59,6 +61,8 @@ console.log(isAuth)
         render={(props) => <StripeContainer {...props} />}
       />
       <Route path="/account" exact render={(props) => <Account {...props} />} />
+      <Route path="/announce/"  render={(props) => <Announce {...props} />} />
+
       <Redirect to="/Accuiel" />
     </Switch>
     

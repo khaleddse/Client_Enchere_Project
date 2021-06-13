@@ -250,10 +250,10 @@ const Card = ({ item }) => {
             ml="42%"
             color="gray.700"
             as="a"
-            href={"/" + anounce.__t + "?id=" + anounce._id}
             fontSize="sm"
             variant={"link"}
             isTruncated
+            onClick={()=>history.push('/announce/?id='+anounce._id)}
           >
             Learn more...
           </Button>

@@ -65,3 +65,13 @@ export const getAllAnnonce = (page) => {
       console.error(err);
     });
 };
+export const getAnnounce = (id) => {
+  return axios
+    .get(`/announce/${id}`)
+    .then((resData) => {
+      return resData.data;
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+};

@@ -10,4 +10,14 @@ export const AllCitys = (authData) => {
        console.error(err.message);
       });
 };
+export const getCity = (id) => {
+  return axios
+    .get("/city/"+id)
+    .then((resData) => {
+      return resData.data;
+    })
+    .catch((err) => {
+     console.error(err.message);
+    });
+};
   
