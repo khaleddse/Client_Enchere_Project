@@ -12,11 +12,11 @@ function App({auth,isauthempl,authCheckHandler}) {
   authCheckHandler()
  
  },[])
- useEffect(()=>{
+ /*useEffect(()=>{
   if(!auth){
     history.push('/signin')
   }
- },[auth])
+ },[auth])*/
   return (
     <ChakraProvider>
     <Navbar/>

@@ -198,9 +198,7 @@ const redirecttoPay=()=>{
               </Button>
             </>
           )}
-         <Menu  selectedCateg={selectedCateg}
-         filterHandler={filterHandler}
-         />
+        
         </Stack>
       </Flex>
 

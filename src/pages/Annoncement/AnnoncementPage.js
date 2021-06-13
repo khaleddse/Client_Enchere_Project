@@ -12,6 +12,8 @@ import openSocket from "socket.io-client";
 import Navbar from "../../components/AppBar/AppBar";
 import pageNotFound from "./PageNotFound";
 import { Portal ,Box} from "@chakra-ui/react"
+import Menu from "../../components/UI/Menu"
+
 const useStyles = makeStyles((theme) => ({
   root: {
     "& > * + *": {
@@ -124,10 +126,7 @@ const AnnoncmentPage = ({
   const regex = new RegExp(text.search, "i");
   return (
     <div className={classes.root}>
-      <Navbar
-       selectedCateg={selectedCateg}
-       filterHandler={FilterChangeHandler}
-      />
+    
       {isloding ? (
         <Stack direction="row" spacing={4}>
           <Spinner
@@ -200,6 +199,8 @@ const AnnoncmentPage = ({
         onChange={(_, value) => setPage(value)}
       />
       </Center>
+      <Menu selectedCateg={selectedCateg}
+       filterHandler={FilterChangeHandler}/>
     </div>
   );
 };
