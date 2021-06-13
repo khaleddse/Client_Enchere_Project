@@ -125,8 +125,11 @@ const AnnoncmentPage = ({
   console.log(isfiltredbycountry+" "+selectedcountryId)
   const regex = new RegExp(text.search, "i");
   return (
-    <div className={classes.root}>
-    
+    <div >
+     <Box position="sticky" top='2rem' ml="1rem" mt='1rem' right='0'>
+      <Menu selectedCateg={selectedCateg}
+       filterHandler={FilterChangeHandler}/>
+      </Box>
       {isloding ? (
         <Stack direction="row" spacing={4}>
           <Spinner
@@ -199,8 +202,8 @@ const AnnoncmentPage = ({
         onChange={(_, value) => setPage(value)}
       />
       </Center>
-      <Menu selectedCateg={selectedCateg}
-       filterHandler={FilterChangeHandler}/>
+
+      
     </div>
   );
 };
