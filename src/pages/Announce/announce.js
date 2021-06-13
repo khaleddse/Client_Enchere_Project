@@ -16,12 +16,13 @@ import {
 import decode from "jwt-decode";
 import { useEffect, useState } from "react";
 import openSocket from "socket.io-client";
-import { getAnnounce } from "../../services/AnnonceService";
+import { getAnnounce, deleteAnnounce } from "../../services/AnnonceService";
 import { getCity } from "../../services/CityServices";
 import { getUser } from "../../services/userServices";
 import { apiBaseUrl } from "../../services/utils";
 import ImageNotFound from "../../assets/images/NotFound.jpg";
 import { ImLocation2, ImPhone, ImHeart } from "react-icons/im";
+import { RiDeleteBin6Line } from "react-icons/ri";
 import { onEnchereParticipation } from "../../services/AnnonceService";
 import { useHistory } from "react-router";
 import Bip from "../../assets/sounds/bip.mp3";
@@ -58,7 +59,7 @@ const Announce = (props) => {
     onGetAnnounceHandler(id);
   }, []);
   useEffect(() => {
-    HandleWinner()
+    HandleWinner();
   }, [announce]);
 
   const onGetCityHandler = async (id) => {
@@ -94,7 +95,12 @@ const Announce = (props) => {
       id && setWinner(await getUser(id));
     }
   };
-
+  const deletePostHandler = async () => {
+    if (window.confirm("Are you sure to delete this post ?")) {
+      await deleteAnnounce(announce._id);
+      history.push("/");
+    }
+  };
   const onSubmitPriceHandler = async () => {
     const { userId, point } = decode(localStorage.getItem("token"));
     const user = userId;
@@ -122,7 +128,6 @@ const Announce = (props) => {
   };
   return (
     <Box mx={{ base: "1rem", md: "6rem" }} my="3rem">
-      <HStack>announce</HStack>
       <Grid
         templateColumns={{ base: "repeat(2, 1fr)", md: "repeat(5, 1fr)" }}
         gap={6}
@@ -152,88 +157,66 @@ const Announce = (props) => {
           <br />
 
           <Divider my="1rem" />
-          <Heading fontSize="xl" mb="1rem">
-            {announce.price
-              ? "Price : " + announce.price
-              : announce.initial_price
-              ? "Actual price : " +
-                (announce?.enchere_list[announce.enchere_list.length - 1]
-                  ?.price || announce.initial_price)
-              : "Participation : " + announce.participation_price}
-          </Heading>
-          {announce.isVlable ? (
-            announce.__t === "Enchere" && (
-              <Box>
-                {"Expiry date: " +
-                  new Date(announce.end_Date).toLocaleDateString() +
-                  " - " +
-                  new Date(announce.end_Date).getHours() +
-                  ":00"}
-                <br />
-                {"Initial Price: " + announce.initial_price}
-                <br />
+          <Box display="flex" justifyContent="space-between">
+            <Heading fontSize="xl" mb="1rem">
+              {announce.price
+                ? "Price : " + announce.price
+                : announce.initial_price
+                ? "Actual price : " +
+                  (announce?.enchere_list[announce.enchere_list.length - 1]
+                    ?.price || announce.initial_price)
+                : "Participation : " + announce.participation_price}
+            </Heading>
+            {localStorage.getItem("token") &&
+              decode(localStorage.getItem("token")).userId ===
+                announce.user._id && (
+                <Button onClick={() => deletePostHandler()}>
+                  <RiDeleteBin6Line /> Delete post
+                </Button>
+              )}
+          </Box>
+          <Box display="flex" justifyContent="space-between">
+            {announce.isVlable ? (
+              announce.__t === "Enchere" && (
+                <Box>
+                  {"Expiry date: " +
+                    new Date(announce.end_Date).toLocaleDateString() +
+                    " - " +
+                    new Date(announce.end_Date).getHours() +
+                    ":00"}
+                  <br />
+                  {"Initial Price: " + announce.initial_price}
+                  <br />
 
-                {localStorage.getItem("token") &&
-                decode(localStorage.getItem("token")).userId ===
-                  announce.user._id ? (
-                  <Text color="tomato">
-                    You can't participate ,it's Yours !
-                  </Text>
-                ) : (
-                  <HStack mt="1rem">
-                    <Input
-                      type="number"
-                      value={participation_price}
-                      onChange={handleInputChange}
-                      placeholder="Put your price here"
-                    />
-                    <Button colorScheme="blue" onClick={onSubmitPriceHandler}>
-                      Submit
-                    </Button>
-                  </HStack>
-                )}
-              </Box>
-            )
-          ) : (
-            <HStack display="flex" justifyContent="space-between">
-              <Badge as="h1" variant="outline" colorScheme={"red"}>
-                Sold
-              </Badge>
-
-              {localStorage.getItem("token") &&
-                (decode(localStorage.getItem("token")).userId ===
-                announce.user._id && announce.enchere_list.length>0 ? (
-                  <HStack px="6" py="3" float="right">
-                    <h1>To :</h1>
-                    <Avatar
-                      size="lg"
-                      name=""
-                      src={Winner && apiBaseUrl + "" + Winner.image}
-                    />
-                    <VStack py="1" spacing="0">
-                      <Button
-                        as="a"
-                        href={"/profile?_id=" + Winner._id}
-                        variant={"link"}
-                        alignSelf="flex-start"
-                        fontSize="xs"
-                      >
-                        {Winner.firstname + " " + Winner.lastname}
+                  {localStorage.getItem("token") &&
+                  decode(localStorage.getItem("token")).userId ===
+                    announce.user._id ? (
+                    <Box color="tomato">
+                      You can't participate ,it's Yours !
+                    </Box>
+                  ) : (
+                    <HStack mt="1rem">
+                      <Input
+                        type="number"
+                        value={participation_price}
+                        onChange={handleInputChange}
+                        placeholder="Put your price here"
+                      />
+                      <Button colorScheme="blue" onClick={onSubmitPriceHandler}>
+                        Submit
                       </Button>
-                      <Box
-                        color="gray.500"
-                        fontWeight="semibold"
-                        fontSize="xs"
-                        d="flex"
-                        alignItems="center"
-                      >
-                        {"Phone : " + Winner.phone}
-                      </Box>
-                    </VStack>
-                  </HStack>
-                ) : null)}
-            </HStack>
-          )}
+                    </HStack>
+                  )}
+                </Box>
+              )
+            ) : (
+              <HStack display="flex" justifyContent="space-between">
+                <Badge as="h1" variant="outline" colorScheme={"red"}>
+                  Sold
+                </Badge>
+              </HStack>
+            )}
+          </Box>
 
           <Divider my="1rem" />
           <HStack mb="1rem">
@@ -258,36 +241,73 @@ const Announce = (props) => {
           </HStack>
           <Divider my="1rem" />
 
-          <HStack px="6" py="3">
-            <Avatar
-              size="lg"
-              name=""
-              src={announce.user && apiBaseUrl + "" + announce.user.image}
-            />
-            <VStack py="1" spacing="0">
-              <Button
-                as="a"
-                href={announce.user && "/profile?_id=" + announce.user._id}
-                variant={"link"}
-                alignSelf="flex-start"
-                fontSize="xs"
-              >
-                {announce.user &&
-                  announce.user.firstname + " " + announce.user.lastname}
-              </Button>
-              <Box
-                color="gray.500"
-                fontWeight="semibold"
-                fontSize="xs"
-                d="flex"
-                alignItems="center"
-              >
-                {new Date(announce.createdAt).toDateString() +
-                  " " +
-                  new Date(announce.createdAt).toLocaleTimeString()}
-              </Box>
-            </VStack>
-          </HStack>
+          <Box display="flex" justifyContent="space-between" flexDirection={{base:"column",md:"row"}}>
+            <HStack px="6" py="3">
+              <h1> Owner</h1>
+              <Avatar
+                size="lg"
+                name=""
+                src={announce.user && apiBaseUrl + "" + announce.user.image}
+              />
+              <VStack py="1" spacing="0">
+                <Button
+                  as="a"
+                  href={announce.user && "/profile?_id=" + announce.user._id}
+                  variant={"link"}
+                  alignSelf="flex-start"
+                  fontSize="xs"
+                >
+                  {announce.user &&
+                    announce.user.firstname + " " + announce.user.lastname}
+                </Button>
+                <Box
+                  color="gray.500"
+                  fontWeight="semibold"
+                  fontSize="xs"
+                  d="flex"
+                  alignItems="center"
+                >
+                  {new Date(announce.createdAt).toDateString() +
+                    " " +
+                    new Date(announce.createdAt).toLocaleTimeString()}
+                </Box>
+              </VStack>
+            </HStack>
+            {announce.__t === "Enchere" && announce.enchere_list.length > 0 ? (
+              <HStack px="6" py="3">
+                {announce.isVlable ? (
+                  <h1>Last Partcipation:</h1>
+                ) : (
+                  <h1>Sold To</h1>
+                )}
+                <Avatar
+                  size="lg"
+                  name=""
+                  src={Winner && apiBaseUrl + "" + Winner.image}
+                />
+                <VStack py="1" spacing="0">
+                  <Button
+                    as="a"
+                    href={"/profile?_id=" + Winner._id}
+                    variant={"link"}
+                    alignSelf="flex-start"
+                    fontSize="xs"
+                  >
+                    {Winner.firstname + " " + Winner.lastname}
+                  </Button>
+                  <Box
+                    color="gray.500"
+                    fontWeight="semibold"
+                    fontSize="xs"
+                    d="flex"
+                    alignItems="center"
+                  >
+                    {"Phone : " + Winner.phone}
+                  </Box>
+                </VStack>
+              </HStack>
+            ) : null}
+          </Box>
         </GridItem>
       </Grid>
     </Box>

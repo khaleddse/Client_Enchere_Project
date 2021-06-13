@@ -75,3 +75,15 @@ export const getAnnounce = (id) => {
       console.error(err);
     });
 };
+export const deleteAnnounce = (id) => {
+  const token = localStorage.getItem("token");
+    axios.defaults.headers.common["Authorization"] = token;
+  return axios
+    .delete(`/announce/${id}`)
+    .then((resData) => {
+      return resData.data;
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+};
