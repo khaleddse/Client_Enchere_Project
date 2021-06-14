@@ -77,7 +77,12 @@ const AddAnnoucement = ({ Listcategories, ongetAllCategories }) => {
   });
 
   useEffect(() => {
-    ongetAllCategories();
+    if(localStorage.getItem('token')){
+      ongetAllCategories();
+    }else{
+      history.push('/signin')
+    }
+    
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
@@ -101,7 +106,7 @@ const AddAnnoucement = ({ Listcategories, ongetAllCategories }) => {
   };
 
   const token = localStorage.getItem("token");
-  const user = decode(token);
+  const user =token&& decode(token);
 
   let history = useHistory();
 
